@@ -1,6 +1,7 @@
+using Tempest.Weapons;
 using UnityEngine;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour, IDamageable
 {
     [SerializeField] private float maxHealth = 100f;
 
@@ -13,12 +14,12 @@ public class PlayerHealth : MonoBehaviour
         CurrentHealth = maxHealth;
     }
 
-    public void TakeDamage(float amount)
+    public void TakeDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         if (IsDown) return;
 
-        CurrentHealth = Mathf.Max(0f, CurrentHealth - amount);
-        GameEventBus.RaisePlayerDamaged(amount);
+        CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
+        GameEventBus.RaisePlayerDamaged(damage);
 
         if (CurrentHealth <= 0f)
             GoDown();
