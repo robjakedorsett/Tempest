@@ -23,6 +23,8 @@ MonoBehaviour:
   reloadTime: 2
   range: 80
   spread: 0.5
+  fireMode: 1
+  weaponPrefab: {fileID: 0}
   muzzleFlashPrefab: {fileID: 0}
   hitEffectPrefab: {fileID: 0}
   fireSound: {fileID: 0}

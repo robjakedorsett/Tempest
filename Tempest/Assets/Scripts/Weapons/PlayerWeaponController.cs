@@ -216,7 +216,7 @@ public class PlayerWeaponController : MonoBehaviour
             return cameraHolder.forward;
 
         float spreadRad = _weapon.spread * Mathf.Deg2Rad;
-        Vector2 randomPoint = Random.insideUnitCircle * Mathf.Tan(spreadRad);
+        Vector2 randomPoint = UnityEngine.Random.insideUnitCircle * Mathf.Tan(spreadRad);
 
         Vector3 direction = cameraHolder.forward
             + cameraHolder.right * randomPoint.x
