@@ -1,0 +1,35 @@
+.ammo-hud {
+    position: absolute;
+    right: 40px;
+    bottom: 40px;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.ammo-container {
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.ammo-label {
+    font-size: 28px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+}
+
+.ammo-label--low {
+    color: rgb(255, 70, 50);
+}
+
+.reload-label {
+    font-size: 18px;
+    color: rgb(255, 220, 50);
+    -unity-font-style: bold;
+    margin-top: 4px;
+    display: none;
+}
+
+.reload-label--visible {
+    display: flex;
+}
