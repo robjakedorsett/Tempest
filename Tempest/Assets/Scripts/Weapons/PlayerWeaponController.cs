@@ -3,6 +3,9 @@ using Tempest.Player.Enums;
 using Tempest.Weapons;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerInput))]
+[RequireComponent(typeof(PlayerHealth))]
+[RequireComponent(typeof(PlayerMovementStateMachine))]
 public class PlayerWeaponController : MonoBehaviour
 {
     [Header("References")]
@@ -16,7 +19,7 @@ public class PlayerWeaponController : MonoBehaviour
     private RaycastSensor _sensor;
     private PlayerInput _input;
     private PlayerHealth _health;
-    private StateMachine<PlayerMovementStates, PlayerContext> _stateMachine;
+    private PlayerMovementStateMachine _stateMachine;
 
     private float _nextFireTime;
     private int _currentAmmo;
@@ -30,15 +33,16 @@ public class PlayerWeaponController : MonoBehaviour
         _input = GetComponent<PlayerInput>();
         _health = GetComponent<PlayerHealth>();
         _stateMachine = GetComponent<PlayerMovementStateMachine>();
+
+        if (cameraHolder == null)
+            Debug.LogError("[WeaponController] cameraHolder not assigned.", this);
     }
 
     private void Start()
     {
-        var context = _stateMachine as PlayerMovementStateMachine;
-        if (context != null && context.Context?.Loadout?.PrimaryWeapon != null)
-        {
-            EquipWeapon(context.Context.Loadout.PrimaryWeapon);
-        }
+        var weapon = _stateMachine.Context?.Loadout?.PrimaryWeapon;
+        if (weapon != null)
+            EquipWeapon(weapon);
     }
 
     public void EquipWeapon(WeaponDefinition weapon)
@@ -51,11 +55,10 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void Update()
     {
-        if (_weapon == null) return;
         if (!CanFire()) return;
-        if (!HasFireInput()) return;
         if (Time.time < _nextFireTime) return;
         if (_currentAmmo <= 0) return;
+        if (!HasFireInput()) return;
 
         Fire();
     }
@@ -63,6 +66,7 @@ public class PlayerWeaponController : MonoBehaviour
     private bool CanFire()
     {
         if (_weapon == null) return false;
+        if (cameraHolder == null) return false;
         if (_health.IsDown) return false;
 
         var leafState = GetLeafState();
@@ -100,7 +104,9 @@ public class PlayerWeaponController : MonoBehaviour
     private void Fire()
     {
         _currentAmmo--;
-        _nextFireTime = Time.time + 1f / _weapon.fireRate;
+        _nextFireTime = _weapon.fireRate > 0f
+            ? Time.time + 1f / _weapon.fireRate
+            : Time.time;
 
         Vector3 direction = GetSpreadDirection();
         bool hit = _sensor.CheckRay(cameraHolder, direction, debugMode);
