@@ -62,6 +62,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     private bool CanFire()
     {
+        if (_weapon == null) return false;
         if (_health.IsDown) return false;
 
         var leafState = GetLeafState();
@@ -112,7 +113,10 @@ public class PlayerWeaponController : MonoBehaviour
 
             if (debugMode)
             {
-                Debug.Log($"[Weapon] Hit {hitInfo.collider.name} at {hitInfo.distance:F1}m — {_weapon.damage} damage");
+                string damageInfo = damageable != null
+                    ? $"{_weapon.damage} damage"
+                    : "no damageable";
+                Debug.Log($"[Weapon] Hit {hitInfo.collider.name} at {hitInfo.distance:F1}m — {damageInfo}");
             }
         }
         else if (debugMode)
