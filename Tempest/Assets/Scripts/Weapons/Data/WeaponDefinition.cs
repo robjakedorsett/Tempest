@@ -21,6 +21,9 @@ namespace Tempest.Weapons
         public float range;
         public float spread;
 
+        [Header("Prefab")]
+        public GameObject weaponPrefab;
+
         [Header("Effects")]
         public GameObject muzzleFlashPrefab;
         public GameObject hitEffectPrefab;
