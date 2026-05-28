@@ -1,3 +1,5 @@
+using Tempest.Weapons;
+
 public class PlayerContext
 {
     public PlayerContext(PlayerMotor motor, PlayerInput input, PlayerStance stance, PlayerHealth health)
@@ -12,4 +14,5 @@ public class PlayerContext
     public PlayerInput Input { get; set; }
     public PlayerStance Stance { get; set; }
     public PlayerHealth Health { get; set; }
+    public PlayerLoadout Loadout { get; set; }
 }
