@@ -1,3 +1,4 @@
+using System;
 using Tempest.Core.Sensors;
 using Tempest.Player.Enums;
 using Tempest.Weapons;
@@ -24,10 +25,17 @@ public class PlayerWeaponController : MonoBehaviour
 
     private float _nextFireTime;
     private int _currentAmmo;
+    private bool _isReloading;
+    private float _reloadEndTime;
 
     public int CurrentAmmo => _currentAmmo;
     public int MaxAmmo => _weapon != null ? _weapon.magazineSize : 0;
     public bool HasWeapon => _weapon != null;
+    public bool IsReloading => _isReloading;
+    public string WeaponName => _weapon != null ? _weapon.weaponName : "";
+
+    public event Action<int, int> OnAmmoChanged;
+    public event Action<bool> OnReloadStateChanged;
 
     private void Awake()
     {
@@ -52,13 +60,48 @@ public class PlayerWeaponController : MonoBehaviour
         _sensor = new RaycastSensor(weapon.range, hitLayers);
         _currentAmmo = weapon.magazineSize;
         _nextFireTime = 0f;
+        _isReloading = false;
+        OnAmmoChanged?.Invoke(_currentAmmo, weapon.magazineSize);
     }
 
     private void Update()
     {
+        if (_weapon == null) return;
+
+        if (_isReloading)
+        {
+            if (Time.time >= _reloadEndTime)
+            {
+                CompleteReload();
+                return;
+            }
+
+            if (_health.IsDown)
+            {
+                CancelReload();
+                return;
+            }
+
+            return;
+        }
+
+        if (_input.ReloadPressed)
+        {
+            _input.ConsumeReload();
+            if (_currentAmmo < _weapon.magazineSize && !_health.IsDown)
+                StartReload();
+            return;
+        }
+
         if (!CanFire()) return;
         if (Time.time < _nextFireTime) return;
-        if (_currentAmmo <= 0) return;
+
+        if (_currentAmmo <= 0)
+        {
+            StartReload();
+            return;
+        }
+
         if (!HasFireInput()) return;
 
         Fire();
@@ -105,6 +148,7 @@ public class PlayerWeaponController : MonoBehaviour
     private void Fire()
     {
         _currentAmmo--;
+        OnAmmoChanged?.Invoke(_currentAmmo, _weapon.magazineSize);
         _nextFireTime = _weapon.fireRate > 0f
             ? Time.time + 1f / _weapon.fireRate
             : Time.time;
@@ -130,6 +174,30 @@ public class PlayerWeaponController : MonoBehaviour
         {
             Debug.Log("[Weapon] Missed");
         }
+    }
+
+    private void StartReload()
+    {
+        if (_weapon == null || _isReloading || _health.IsDown) return;
+        if (_currentAmmo >= _weapon.magazineSize) return;
+
+        _isReloading = true;
+        _reloadEndTime = Time.time + _weapon.reloadTime;
+        OnReloadStateChanged?.Invoke(true);
+    }
+
+    private void CompleteReload()
+    {
+        _isReloading = false;
+        _currentAmmo = _weapon.magazineSize;
+        OnReloadStateChanged?.Invoke(false);
+        OnAmmoChanged?.Invoke(_currentAmmo, _weapon.magazineSize);
+    }
+
+    private void CancelReload()
+    {
+        _isReloading = false;
+        OnReloadStateChanged?.Invoke(false);
     }
 
     private Vector3 GetSpreadDirection()
