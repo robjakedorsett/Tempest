@@ -15,4 +15,5 @@ public class PlayerContext
     public PlayerStance Stance { get; set; }
     public PlayerHealth Health { get; set; }
     public PlayerLoadout Loadout { get; set; }
+    public PlayerWeaponController WeaponController { get; set; }
 }

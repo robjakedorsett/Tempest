@@ -14,6 +14,11 @@ public class PlayerMovementStateMachine : StateMachine<PlayerMovementStates, Pla
         var stance = GetComponent<PlayerStance>();
         var health = GetComponent<PlayerHealth>();
         Context = new PlayerContext(motor, input, stance, health);
+
+        var weaponController = GetComponent<PlayerWeaponController>();
+        if (weaponController != null)
+            Context.WeaponController = weaponController;
+
         base.Awake();
 
         var grounded = new PlayerGroundedState(PlayerMovementStates.Grounded, this);
