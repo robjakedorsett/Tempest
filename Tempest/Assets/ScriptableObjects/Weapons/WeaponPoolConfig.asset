@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31100cdc927b4234598a80c2be8043f9, type: 3}
+  m_Name: WeaponPoolConfig
+  m_EditorClassIdentifier: Assembly-CSharp::Tempest.Weapons.WeaponPoolConfig
+  allWeapons:
+  - {fileID: 11400000, guid: eae8fe3f8fe4efe4387fafcdb5ca9176, type: 2}
+  - {fileID: 11400000, guid: e17b60fe6e641e44081bf50c0bc26a32, type: 2}
+  - {fileID: 11400000, guid: d3e20327ed2909149af0fc1abf028fcc, type: 2}
+  allDeployables:
+  - {fileID: 11400000, guid: a201b046958ffc64f90ae510b729992d, type: 2}
