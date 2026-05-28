@@ -11,6 +11,7 @@ public class PlayerWeaponController : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform cameraHolder;
     [SerializeField] private LayerMask hitLayers;
+    [SerializeField] private WeaponDefinition startingWeapon;
 
     [Header("Debug")]
     [SerializeField] private bool debugMode;
@@ -40,7 +41,7 @@ public class PlayerWeaponController : MonoBehaviour
 
     private void Start()
     {
-        var weapon = _stateMachine.Context?.Loadout?.PrimaryWeapon;
+        var weapon = _stateMachine.Context?.Loadout?.PrimaryWeapon ?? startingWeapon;
         if (weapon != null)
             EquipWeapon(weapon);
     }
