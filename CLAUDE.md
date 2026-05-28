@@ -20,7 +20,7 @@ Pre-production. No code yet. The GDD is the first deliverable.
 ## Key Design Decisions
 
 - **Southeast Asian mythology** — chosen for zero competition in the co-op FPS space, visual distinctiveness, and deep enemy bestiary
-- **Random loadouts** — players get a random primary, secondary, and consumable each run. No swapping mid-run.
+- **Player-chosen loadouts** — players pick their primary, secondary, and consumable before each run. No swapping mid-run. Weapon pool expands via meta progression.
 - **In-run blessings** — XP from kills triggers level-ups with a choice of 3 random blessings that stack and synergize (Mega Bonk style)
 - **Light classes** — 4 classes (Warden, Seeker, Invoker, Mender) each with a passive and one active ability. Soft roles, no hard dependencies.
 - **Meta progression** — hub building upgrades (shared) + character skill trees (individual). Spirit shards from level-ups, relics from runs, mythic fragments from bosses.

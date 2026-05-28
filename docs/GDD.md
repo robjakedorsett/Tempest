@@ -30,9 +30,9 @@ Over-the-top action. The world is dangerous and the mythology is treated with re
 ### Pillars
 
 1. **Satisfying gunfeel** — non-negotiable. Weapons must feel punchy and impactful.
-2. **Random loadouts force adaptation** — you play what you get, not what you planned.
+2. **Your build, transformed** — pick a weapon you like, then watch blessings turn it into something you never expected.
 3. **Co-op chaos creates stories** — the funny moments emerge naturally from the systems.
-4. **Massive replayability** — procedural generation, random loadouts, stacking blessings, and build variety mean no two runs feel the same.
+4. **Massive replayability** — procedural generation, stacking blessings, and build variety mean no two runs feel the same.
 
 ---
 
@@ -92,7 +92,9 @@ Underground lava networks, unstable terrain, heat hazards. Sprawling cave networ
 
 ### Weapons
 
-Random loadouts give each player a **primary weapon**, a **secondary weapon**, and one **consumable item** (grenade/trap/totem). You work with what you get — no swapping mid-run, but you can find temporary weapon pickups in the level.
+Players **choose their loadout** before each run: a **primary weapon**, a **secondary weapon**, and one **consumable item** (grenade/trap/totem). You pick weapons you enjoy and learn to master — but blessings transform how they behave mid-run, creating the build variety. New weapons are unlocked through meta progression (Armoury upgrades), expanding the pool over time.
+
+No swapping weapons mid-run. You commit to your choices at the start. Temporary weapon pickups can still be found in the level as situational power-ups.
 
 **Weapon pool examples (mythologically themed):**
 
@@ -102,7 +104,7 @@ Random loadouts give each player a **primary weapon**, a **secondary weapon**, a
 | **Secondary** | Bone pistol, jade dart gun, serpent revolver |
 | **Consumable** | Fire totems, smoke bombs, spirit traps, swarm grenades |
 
-Each weapon should feel distinct and change how you play that run.
+Each weapon should feel distinct. Blessings are what make the same weapon play differently run-to-run — ricochet rounds on a shotgun plays completely differently to chain lightning on that same shotgun.
 
 ### Combat Feel
 
