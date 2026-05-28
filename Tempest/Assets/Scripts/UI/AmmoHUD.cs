@@ -8,15 +8,12 @@ public class AmmoHUD : MonoBehaviour
     private Label _ammoLabel;
     private Label _reloadLabel;
 
-    private void Awake()
+    private void OnEnable()
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
         _ammoLabel = root.Q<Label>("ammo-label");
         _reloadLabel = root.Q<Label>("reload-label");
-    }
 
-    private void OnEnable()
-    {
         _weaponController = FindFirstObjectByType<PlayerWeaponController>();
         if (_weaponController == null) return;
 
@@ -39,7 +36,7 @@ public class AmmoHUD : MonoBehaviour
     {
         _ammoLabel.text = $"{current} / {max}";
 
-        bool isLow = max > 0 && current <= max / 4;
+        bool isLow = max > 0 && current / (float)max <= 0.25f;
         _ammoLabel.EnableInClassList("ammo-label--low", isLow);
     }
 

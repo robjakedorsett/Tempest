@@ -32,7 +32,6 @@ public class PlayerWeaponController : MonoBehaviour
     public int MaxAmmo => _weapon != null ? _weapon.magazineSize : 0;
     public bool HasWeapon => _weapon != null;
     public bool IsReloading => _isReloading;
-    public string WeaponName => _weapon != null ? _weapon.weaponName : "";
 
     public event Action<int, int> OnAmmoChanged;
     public event Action<bool> OnReloadStateChanged;
@@ -56,6 +55,9 @@ public class PlayerWeaponController : MonoBehaviour
 
     public void EquipWeapon(WeaponDefinition weapon)
     {
+        if (_isReloading)
+            OnReloadStateChanged?.Invoke(false);
+
         _weapon = weapon;
         _sensor = new RaycastSensor(weapon.range, hitLayers);
         _currentAmmo = weapon.magazineSize;
@@ -82,6 +84,9 @@ public class PlayerWeaponController : MonoBehaviour
                 return;
             }
 
+            if (_input.ReloadPressed)
+                _input.ConsumeReload();
+
             return;
         }
 
@@ -89,8 +94,10 @@ public class PlayerWeaponController : MonoBehaviour
         {
             _input.ConsumeReload();
             if (_currentAmmo < _weapon.magazineSize && !_health.IsDown)
+            {
                 StartReload();
-            return;
+                return;
+            }
         }
 
         if (!CanFire()) return;
@@ -184,6 +191,9 @@ public class PlayerWeaponController : MonoBehaviour
         _isReloading = true;
         _reloadEndTime = Time.time + _weapon.reloadTime;
         OnReloadStateChanged?.Invoke(true);
+
+        if (_weapon.reloadSound != null)
+            AudioSource.PlayClipAtPoint(_weapon.reloadSound, transform.position);
     }
 
     private void CompleteReload()

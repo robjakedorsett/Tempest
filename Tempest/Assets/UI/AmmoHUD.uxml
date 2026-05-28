@@ -2,7 +2,7 @@
     <Style src="AmmoHUD.uss" />
     <ui:VisualElement name="ammo-hud" class="ammo-hud" picking-mode="Ignore">
         <ui:VisualElement class="ammo-container" picking-mode="Ignore">
-            <ui:Label name="ammo-label" class="ammo-label" text="30 / 30" picking-mode="Ignore" />
+            <ui:Label name="ammo-label" class="ammo-label" text="-- / --" picking-mode="Ignore" />
         </ui:VisualElement>
         <ui:Label name="reload-label" class="reload-label" text="RELOADING" picking-mode="Ignore" />
     </ui:VisualElement>
