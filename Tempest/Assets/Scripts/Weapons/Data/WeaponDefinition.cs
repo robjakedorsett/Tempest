@@ -20,6 +20,7 @@ namespace Tempest.Weapons
         public float reloadTime;
         public float range;
         public float spread;
+        public FireMode fireMode;
 
         [Header("Prefab")]
         public GameObject weaponPrefab;

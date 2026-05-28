@@ -11,4 +11,10 @@ namespace Tempest.Weapons
         Hitscan,
         Projectile
     }
+
+    public enum FireMode
+    {
+        SemiAuto,
+        FullAuto
+    }
 }
