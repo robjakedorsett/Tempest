@@ -21,6 +21,9 @@ public class PlayerInput : MonoBehaviour
     private float _lastInteractTime = -999f;
     private bool _interactConsumed;
 
+    private float _lastReloadTime = -999f;
+    private bool _reloadConsumed;
+
     public bool JumpPressed
     {
         get
@@ -45,6 +48,15 @@ public class PlayerInput : MonoBehaviour
         {
             if (_interactConsumed) return false;
             return Time.time - _lastInteractTime <= pressBufferTime;
+        }
+    }
+
+    public bool ReloadPressed
+    {
+        get
+        {
+            if (_reloadConsumed) return false;
+            return Time.time - _lastReloadTime <= pressBufferTime;
         }
     }
 
@@ -96,10 +108,17 @@ public class PlayerInput : MonoBehaviour
             InteractHeld = true;
         };
         InputActions.Player.Interact.canceled += _ => InteractHeld = false;
+
+        InputActions.Player.Reload.performed += _ =>
+        {
+            _reloadConsumed = false;
+            _lastReloadTime = Time.time;
+        };
     }
 
     public void ConsumeJump() => _jumpConsumed = true;
     public void ConsumeCrouch() => CrouchPressed = false;
     public void ConsumeShoot() => _shootConsumed = true;
     public void ConsumeInteract() => _interactConsumed = true;
+    public void ConsumeReload() => _reloadConsumed = true;
 }
