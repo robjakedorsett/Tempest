@@ -28,6 +28,8 @@ namespace Tempest.Weapons
         [Header("Recoil")]
         [Range(0f, 2f)]
         public float recoil = 1f;
+        public float aimKickUp = 0.8f;
+        public float aimKickHorizontal = 0.3f;
 
         [Header("Prefab")]
         public GameObject weaponPrefab;

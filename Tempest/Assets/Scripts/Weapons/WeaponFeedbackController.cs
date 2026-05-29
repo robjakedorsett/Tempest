@@ -1,4 +1,3 @@
-using Tempest.Weapons;
 using UnityEngine;
 
 public class WeaponFeedbackController : MonoBehaviour
@@ -117,8 +116,18 @@ public class WeaponFeedbackController : MonoBehaviour
         Shake(fireShakeIntensity, fireShakeDuration);
         SpawnMuzzleFlash();
         PlayFireSound();
-        if (weaponBob != null && weaponController.CurrentWeapon != null)
-            weaponBob.TriggerRecoil(weaponController.CurrentWeapon.recoil);
+
+        var weapon = weaponController.CurrentWeapon;
+        if (weapon == null) return;
+
+        float recoilScale = weapon.recoil * (weaponBob != null ? weaponBob.RecoilMultiplier : 1f);
+
+        if (weaponBob != null)
+            weaponBob.TriggerRecoil(weapon.recoil);
+
+        float pitchKick = -weapon.aimKickUp * recoilScale;
+        float yawKick = Random.Range(-weapon.aimKickHorizontal, weapon.aimKickHorizontal) * recoilScale;
+        cameraController.ApplyAimKick(pitchKick, yawKick);
     }
 
     private void HandleHitConfirmed(Vector3 hitPoint, Vector3 hitNormal)
