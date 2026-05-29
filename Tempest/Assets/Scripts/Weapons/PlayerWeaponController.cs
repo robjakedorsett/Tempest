@@ -17,6 +17,9 @@ public class PlayerWeaponController : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool debugMode;
 
+    [Header("Audio")]
+    [SerializeField] private AudioSource weaponAudioSource;
+
     private WeaponDefinition _weapon;
     private RaycastSensor _sensor;
     private PlayerInput _input;
@@ -36,6 +39,11 @@ public class PlayerWeaponController : MonoBehaviour
 
     public event Action<int, int> OnAmmoChanged;
     public event Action<bool> OnReloadStateChanged;
+    public event Action OnWeaponFired;
+    public event Action<Vector3, Vector3> OnHitConfirmed;
+    public event Action<Vector3, Vector3> OnKillConfirmed;
+
+    public WeaponDefinition CurrentWeapon => _weapon;
 
     private void Awake()
     {
@@ -163,6 +171,8 @@ public class PlayerWeaponController : MonoBehaviour
             ? Time.time + 1f / _weapon.fireRate
             : Time.time;
 
+        OnWeaponFired?.Invoke();
+
         Vector3 direction = GetSpreadDirection();
         bool hit = _sensor.CheckRay(cameraHolder, direction, debugMode);
 
@@ -170,7 +180,19 @@ public class PlayerWeaponController : MonoBehaviour
         {
             RaycastHit hitInfo = _sensor.Hit;
             var damageable = hitInfo.collider.GetComponent<IDamageable>();
-            damageable?.TakeDamage(_weapon.damage, hitInfo.point, hitInfo.normal);
+
+            if (damageable != null)
+            {
+                bool killed = damageable.TakeDamage(_weapon.damage, hitInfo.point, hitInfo.normal);
+                if (killed)
+                    OnKillConfirmed?.Invoke(hitInfo.point, hitInfo.normal);
+                else
+                    OnHitConfirmed?.Invoke(hitInfo.point, hitInfo.normal);
+            }
+            else
+            {
+                OnHitConfirmed?.Invoke(hitInfo.point, hitInfo.normal);
+            }
 
             if (debugMode)
             {
@@ -195,8 +217,8 @@ public class PlayerWeaponController : MonoBehaviour
         _reloadEndTime = Time.time + _weapon.reloadTime;
         OnReloadStateChanged?.Invoke(true);
 
-        if (_weapon.reloadSound != null)
-            AudioSource.PlayClipAtPoint(_weapon.reloadSound, transform.position);
+        if (_weapon.reloadSound != null && weaponAudioSource != null)
+            weaponAudioSource.PlayOneShot(_weapon.reloadSound);
     }
 
     private void CompleteReload()
