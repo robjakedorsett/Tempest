@@ -27,6 +27,7 @@ public class PlayerWeaponController : MonoBehaviour
     private int _currentAmmo;
     private bool _isReloading;
     private float _reloadEndTime;
+    private WeaponVisualController _visualController;
 
     public int CurrentAmmo => _currentAmmo;
     public int MaxAmmo => _weapon != null ? _weapon.magazineSize : 0;
@@ -41,6 +42,7 @@ public class PlayerWeaponController : MonoBehaviour
         _input = GetComponent<PlayerInput>();
         _health = GetComponent<PlayerHealth>();
         _stateMachine = GetComponent<PlayerMovementStateMachine>();
+        _visualController = GetComponent<WeaponVisualController>();
 
         if (cameraHolder == null)
             Debug.LogError("[WeaponController] cameraHolder not assigned.", this);
@@ -64,6 +66,7 @@ public class PlayerWeaponController : MonoBehaviour
         _nextFireTime = 0f;
         _isReloading = false;
         OnAmmoChanged?.Invoke(_currentAmmo, weapon.magazineSize);
+        _visualController?.SpawnWeapon(weapon);
     }
 
     private void Update()
