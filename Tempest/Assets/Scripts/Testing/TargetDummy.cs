@@ -9,15 +9,21 @@ namespace Tempest.Testing
         [SerializeField] private float maxHealth = 100f;
         [SerializeField] private float respawnDelay = 2f;
 
+        [Header("Death Feedback")]
+        [SerializeField] private AudioClip deathSound;
+        [SerializeField] private GameObject deathEffectPrefab;
+
         private float _currentHealth;
         private Collider _collider;
         private Renderer _renderer;
+        private AudioSource _audioSource;
 
         private void Awake()
         {
             _currentHealth = maxHealth;
             _collider = GetComponent<Collider>();
             _renderer = GetComponentInChildren<Renderer>();
+            _audioSource = GetComponent<AudioSource>();
         }
 
         public bool TakeDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
@@ -35,6 +41,12 @@ namespace Tempest.Testing
 
         private void Die()
         {
+            if (deathSound != null && _audioSource != null)
+                _audioSource.PlayOneShot(deathSound);
+
+            if (deathEffectPrefab != null)
+                Destroy(Instantiate(deathEffectPrefab, transform.position, Quaternion.identity), 1.5f);
+
             _collider.enabled = false;
             _renderer.enabled = false;
             StartCoroutine(RespawnAfterDelay());

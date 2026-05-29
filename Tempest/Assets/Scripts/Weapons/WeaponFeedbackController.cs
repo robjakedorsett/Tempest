@@ -34,12 +34,8 @@ public class WeaponFeedbackController : MonoBehaviour
 
     [Header("Audio")]
     [SerializeField] private AudioClip hitSound;
-    [SerializeField] private AudioClip killSound;
     [SerializeField] private float minPitch = 0.95f;
     [SerializeField] private float maxPitch = 1.05f;
-
-    [Header("Kill VFX")]
-    [SerializeField] private GameObject killEffectPrefab;
 
     private float _shakeIntensity;
     private float _shakeDuration;
@@ -147,8 +143,6 @@ public class WeaponFeedbackController : MonoBehaviour
         Shake(killShakeIntensity, killShakeDuration);
         _punchTimer = killPunchDuration;
         SpawnHitEffect(hitPoint, hitNormal);
-        SpawnKillEffect(hitPoint, hitNormal);
-        PlaySound(impactAudioSource, killSound);
     }
 
     private void SpawnMuzzleFlash()
@@ -181,17 +175,6 @@ public class WeaponFeedbackController : MonoBehaviour
         if (weapon == null || weapon.hitEffectPrefab == null) return;
         var hit = Instantiate(weapon.hitEffectPrefab, hitPoint, Quaternion.LookRotation(hitNormal));
         Destroy(hit, 1f);
-    }
-
-    private void SpawnKillEffect(Vector3 hitPoint, Vector3 hitNormal)
-    {
-        var weapon = weaponController.CurrentWeapon;
-        var prefab = weapon != null && weapon.killEffectPrefab != null
-            ? weapon.killEffectPrefab
-            : killEffectPrefab;
-        if (prefab == null) return;
-        var kill = Instantiate(prefab, hitPoint, Quaternion.LookRotation(hitNormal));
-        Destroy(kill, 1.5f);
     }
 
     private void PlayFireSound()
