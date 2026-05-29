@@ -14,15 +14,20 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         CurrentHealth = maxHealth;
     }
 
-    public void TakeDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
+    public bool TakeDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
-        if (IsDown) return;
+        if (IsDown) return false;
 
         CurrentHealth = Mathf.Max(0f, CurrentHealth - damage);
         GameEventBus.RaisePlayerDamaged(damage);
 
         if (CurrentHealth <= 0f)
+        {
             GoDown();
+            return true;
+        }
+
+        return false;
     }
 
     public void Heal(float amount)
