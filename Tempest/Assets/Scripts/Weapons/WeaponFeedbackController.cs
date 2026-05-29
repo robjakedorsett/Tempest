@@ -139,34 +139,20 @@ public class WeaponFeedbackController : MonoBehaviour
 
         var weapon = weaponController.CurrentWeapon;
         if (weapon != null && weapon.muzzleFlashPrefab != null)
-        {
-            var flash = Instantiate(weapon.muzzleFlashPrefab, model.MuzzlePoint.position, model.MuzzlePoint.rotation);
-            Destroy(flash, 0.1f);
-        }
+            Instantiate(weapon.muzzleFlashPrefab, model.MuzzlePoint.position, model.MuzzlePoint.rotation, model.MuzzlePoint);
 
         SpawnMuzzleLight(model.MuzzlePoint);
     }
 
     private void SpawnMuzzleLight(Transform muzzlePoint)
     {
-        var lightObj = new GameObject("MuzzleFlash");
+        var lightObj = new GameObject("MuzzleLight");
         lightObj.transform.position = muzzlePoint.position;
-
         var pointLight = lightObj.AddComponent<Light>();
         pointLight.type = LightType.Point;
         pointLight.intensity = muzzleLightIntensity;
         pointLight.color = muzzleLightColor;
         pointLight.range = 5f;
-
-        var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-        sphere.transform.SetParent(lightObj.transform, false);
-        sphere.transform.localScale = Vector3.one * 0.08f;
-        Destroy(sphere.GetComponent<Collider>());
-        var mat = sphere.GetComponent<Renderer>().material;
-        mat.color = muzzleLightColor * 4f;
-        mat.SetColor("_EmissionColor", muzzleLightColor * 8f);
-        mat.EnableKeyword("_EMISSION");
-
         Destroy(lightObj, muzzleLightDuration);
     }
 
