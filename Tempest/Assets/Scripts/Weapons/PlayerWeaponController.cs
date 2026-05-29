@@ -129,6 +129,10 @@ public class PlayerWeaponController : MonoBehaviour
 
         if (!HasFireInput()) return;
 
+        var leafState = GetLeafState();
+        if (leafState != null && leafState.StateKey.Equals(PlayerMovementStates.Run))
+            _input.SprintPressed = false;
+
         Fire();
     }
 
@@ -137,10 +141,6 @@ public class PlayerWeaponController : MonoBehaviour
         if (_weapon == null) return false;
         if (cameraHolder == null) return false;
         if (_health.IsDown) return false;
-
-        var leafState = GetLeafState();
-        if (leafState != null && leafState.StateKey.Equals(PlayerMovementStates.Run))
-            _input.SprintPressed = false;
 
         return true;
     }
