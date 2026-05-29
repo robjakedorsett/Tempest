@@ -16,6 +16,12 @@ public class WeaponVisualController : MonoBehaviour
         if (weapon == null || weapon.weaponPrefab == null)
             return;
 
+        if (weaponHolder == null)
+        {
+            Debug.LogError("[WeaponVisualController] weaponHolder not assigned.", this);
+            return;
+        }
+
         _currentInstance = Instantiate(weapon.weaponPrefab, weaponHolder);
         _currentInstance.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
 
@@ -32,5 +38,10 @@ public class WeaponVisualController : MonoBehaviour
             _currentInstance = null;
         }
         ActiveModel = null;
+    }
+
+    private void OnDestroy()
+    {
+        DespawnWeapon();
     }
 }
