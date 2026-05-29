@@ -118,7 +118,7 @@ public class WeaponFeedbackController : MonoBehaviour
         SpawnMuzzleFlash();
         PlayFireSound();
         if (weaponBob != null && weaponController.CurrentWeapon != null)
-            weaponBob.TriggerRecoil(weaponController.CurrentWeapon);
+            weaponBob.TriggerRecoil(weaponController.CurrentWeapon.recoil);
     }
 
     private void HandleHitConfirmed(Vector3 hitPoint, Vector3 hitNormal)

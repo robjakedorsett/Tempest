@@ -26,9 +26,8 @@ namespace Tempest.Weapons
         public FireMode fireMode;
 
         [Header("Recoil")]
-        public Vector3 recoilPositionKick = new(0f, 0.015f, -0.04f);
-        public Vector3 recoilRotationKick = new(-4f, 0f, 0f);
-        public float recoilRecoverySpeed = 12f;
+        [Range(0f, 2f)]
+        public float recoil = 1f;
 
         [Header("Prefab")]
         public GameObject weaponPrefab;

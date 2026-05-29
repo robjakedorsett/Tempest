@@ -20,6 +20,11 @@ public class WeaponBob : MonoBehaviour
     [SerializeField] private float landMaxVelocity = 15f;
     [SerializeField] private float impactRecoverySpeed = 8f;
 
+    [Header("Fire Recoil")]
+    [SerializeField] private Vector3 basePositionKick = new(0f, 0.015f, -0.04f);
+    [SerializeField] private Vector3 baseRotationKick = new(-4f, 0f, 0f);
+    [SerializeField] private float recoilRecoverySpeed = 12f;
+
     [Header("Settings")]
     [SerializeField] private float resetSmoothing = 5f;
     [SerializeField] private float speedThreshold = 0.1f;
@@ -33,7 +38,6 @@ public class WeaponBob : MonoBehaviour
     private Vector3 _impactOffset;
     private Vector3 _recoilOffset;
     private Vector3 _recoilRotation;
-    private float _recoilRecoverySpeed;
     private bool _wasGrounded;
     private float _lastFallSpeed;
 
@@ -88,12 +92,11 @@ public class WeaponBob : MonoBehaviour
         _wasGrounded = grounded;
     }
 
-    public void TriggerRecoil(WeaponDefinition weapon)
+    public void TriggerRecoil(float weaponRecoil)
     {
-        float m = RecoilMultiplier;
-        _recoilOffset += weapon.recoilPositionKick * m;
-        _recoilRotation += weapon.recoilRotationKick * m;
-        _recoilRecoverySpeed = weapon.recoilRecoverySpeed;
+        float scale = weaponRecoil * RecoilMultiplier;
+        _recoilOffset += basePositionKick * scale;
+        _recoilRotation += baseRotationKick * scale;
     }
 
     private void HandleImpacts(bool grounded)
