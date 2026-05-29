@@ -4,7 +4,7 @@ using UnityEngine;
 public class WeaponFeedbackController : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] private Transform cameraHolder;
+    [SerializeField] private Transform shakeTarget;
     [SerializeField] private PlayerWeaponController weaponController;
     [SerializeField] private WeaponVisualController weaponVisualController;
     [SerializeField] private PlayerCameraController cameraController;
@@ -74,7 +74,7 @@ public class WeaponFeedbackController : MonoBehaviour
 
     private void UpdateShake()
     {
-        cameraHolder.localPosition -= _shakeOffset;
+        shakeTarget.localPosition -= _shakeOffset;
 
         if (_shakeTimer > 0f)
         {
@@ -88,7 +88,7 @@ public class WeaponFeedbackController : MonoBehaviour
             _shakeOffset = Vector3.zero;
         }
 
-        cameraHolder.localPosition += _shakeOffset;
+        shakeTarget.localPosition += _shakeOffset;
     }
 
     private void UpdatePunch()
