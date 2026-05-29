@@ -17,7 +17,7 @@ namespace Tempest.Testing
         {
             _currentHealth = maxHealth;
             _collider = GetComponent<Collider>();
-            _renderer = GetComponent<Renderer>();
+            _renderer = GetComponentInChildren<Renderer>();
         }
 
         public bool TakeDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)

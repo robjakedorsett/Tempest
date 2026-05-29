@@ -45,6 +45,7 @@ public class WeaponFeedbackController : MonoBehaviour
     private float _shakeDuration;
     private float _shakeTimer;
     private float _punchTimer;
+    private Vector3 _shakeOffset;
 
     private void OnEnable()
     {
@@ -70,17 +71,21 @@ public class WeaponFeedbackController : MonoBehaviour
 
     private void UpdateShake()
     {
+        cameraHolder.localPosition -= _shakeOffset;
+
         if (_shakeTimer > 0f)
         {
             _shakeTimer -= Time.deltaTime;
             float t = _shakeDuration > 0f ? Mathf.Clamp01(_shakeTimer / _shakeDuration) : 0f;
-            Vector2 offset = Random.insideUnitCircle * (_shakeIntensity * t);
-            cameraHolder.localPosition = new Vector3(offset.x, offset.y, 0f);
+            Vector2 random = Random.insideUnitCircle * (_shakeIntensity * t);
+            _shakeOffset = new Vector3(random.x, random.y, 0f);
         }
         else
         {
-            cameraHolder.localPosition = Vector3.zero;
+            _shakeOffset = Vector3.zero;
         }
+
+        cameraHolder.localPosition += _shakeOffset;
     }
 
     private void UpdatePunch()
