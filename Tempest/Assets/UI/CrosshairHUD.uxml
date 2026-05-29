@@ -1,0 +1,15 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="CrosshairHUD.uss" />
+    <ui:VisualElement name="crosshair-root" class="crosshair-root" picking-mode="Ignore">
+        <ui:VisualElement name="crosshair-top" class="crosshair-line crosshair-top" picking-mode="Ignore" />
+        <ui:VisualElement name="crosshair-bottom" class="crosshair-line crosshair-bottom" picking-mode="Ignore" />
+        <ui:VisualElement name="crosshair-left" class="crosshair-line crosshair-left" picking-mode="Ignore" />
+        <ui:VisualElement name="crosshair-right" class="crosshair-line crosshair-right" picking-mode="Ignore" />
+        <ui:VisualElement name="hitmarker" class="hitmarker" picking-mode="Ignore">
+            <ui:VisualElement class="hitmarker-line hitmarker-nw" picking-mode="Ignore" />
+            <ui:VisualElement class="hitmarker-line hitmarker-ne" picking-mode="Ignore" />
+            <ui:VisualElement class="hitmarker-line hitmarker-sw" picking-mode="Ignore" />
+            <ui:VisualElement class="hitmarker-line hitmarker-se" picking-mode="Ignore" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

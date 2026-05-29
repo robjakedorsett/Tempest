@@ -1,0 +1,102 @@
+.crosshair-root {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
+/* --- Crosshair lines --- */
+
+.crosshair-line {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+.crosshair-top {
+    width: 2px;
+    height: 16px;
+    left: 50%;
+    top: 50%;
+    translate: -1px -20px;
+}
+
+.crosshair-bottom {
+    width: 2px;
+    height: 16px;
+    left: 50%;
+    top: 50%;
+    translate: -1px 4px;
+}
+
+.crosshair-left {
+    width: 16px;
+    height: 2px;
+    left: 50%;
+    top: 50%;
+    translate: -20px -1px;
+}
+
+.crosshair-right {
+    width: 16px;
+    height: 2px;
+    left: 50%;
+    top: 50%;
+    translate: 4px -1px;
+}
+
+/* --- Hitmarker --- */
+
+.hitmarker {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 0;
+    height: 0;
+    opacity: 0;
+    scale: 1;
+    transition: opacity 0.15s ease-out, scale 0.15s ease-out;
+}
+
+.hitmarker-line {
+    position: absolute;
+    width: 2px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+.hitmarker-nw {
+    translate: -8px -12px;
+    rotate: -45deg;
+}
+
+.hitmarker-ne {
+    translate: 6px -12px;
+    rotate: 45deg;
+}
+
+.hitmarker-sw {
+    translate: -8px 2px;
+    rotate: 45deg;
+}
+
+.hitmarker-se {
+    translate: 6px 2px;
+    rotate: -45deg;
+}
+
+/* --- Hitmarker states --- */
+
+.hitmarker--hit {
+    opacity: 1;
+    scale: 1.2;
+}
+
+.hitmarker--kill {
+    opacity: 1;
+    scale: 1.5;
+}
+
+.hitmarker--kill .hitmarker-line {
+    background-color: rgb(255, 50, 50);
+}
