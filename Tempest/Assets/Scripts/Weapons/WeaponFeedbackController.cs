@@ -12,24 +12,24 @@ public class WeaponFeedbackController : MonoBehaviour
     [SerializeField] private AudioSource impactAudioSource;
 
     [Header("Screen Shake — Fire")]
-    [SerializeField] private float fireShakeIntensity = 0.05f;
-    [SerializeField] private float fireShakeDuration = 0.05f;
+    [SerializeField] private float fireShakeIntensity = 0.015f;
+    [SerializeField] private float fireShakeDuration = 0.06f;
 
     [Header("Screen Shake — Hit")]
-    [SerializeField] private float hitShakeIntensity = 0.1f;
+    [SerializeField] private float hitShakeIntensity = 0.04f;
     [SerializeField] private float hitShakeDuration = 0.1f;
 
     [Header("Screen Shake — Kill")]
-    [SerializeField] private float killShakeIntensity = 0.2f;
-    [SerializeField] private float killShakeDuration = 0.15f;
+    [SerializeField] private float killShakeIntensity = 0.08f;
+    [SerializeField] private float killShakeDuration = 0.2f;
 
     [Header("Kill Camera Punch")]
-    [SerializeField] private float killPunchAngle = 2f;
-    [SerializeField] private float killPunchDuration = 0.1f;
+    [SerializeField] private float killPunchAngle = 3f;
+    [SerializeField] private float killPunchDuration = 0.15f;
 
     [Header("Muzzle Flash Light")]
-    [SerializeField] private float muzzleLightIntensity = 3f;
-    [SerializeField] private float muzzleLightDuration = 0.05f;
+    [SerializeField] private float muzzleLightIntensity = 8f;
+    [SerializeField] private float muzzleLightDuration = 0.08f;
     [SerializeField] private Color muzzleLightColor = new(1f, 0.8f, 0.3f);
 
     [Header("Audio")]
@@ -149,13 +149,24 @@ public class WeaponFeedbackController : MonoBehaviour
 
     private void SpawnMuzzleLight(Transform muzzlePoint)
     {
-        var lightObj = new GameObject("MuzzleLight");
+        var lightObj = new GameObject("MuzzleFlash");
         lightObj.transform.position = muzzlePoint.position;
+
         var pointLight = lightObj.AddComponent<Light>();
         pointLight.type = LightType.Point;
         pointLight.intensity = muzzleLightIntensity;
         pointLight.color = muzzleLightColor;
         pointLight.range = 5f;
+
+        var sphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+        sphere.transform.SetParent(lightObj.transform, false);
+        sphere.transform.localScale = Vector3.one * 0.08f;
+        Destroy(sphere.GetComponent<Collider>());
+        var mat = sphere.GetComponent<Renderer>().material;
+        mat.color = muzzleLightColor * 4f;
+        mat.SetColor("_EmissionColor", muzzleLightColor * 8f);
+        mat.EnableKeyword("_EMISSION");
+
         Destroy(lightObj, muzzleLightDuration);
     }
 
