@@ -73,7 +73,7 @@ public class WeaponFeedbackController : MonoBehaviour
         if (_shakeTimer > 0f)
         {
             _shakeTimer -= Time.deltaTime;
-            float t = Mathf.Clamp01(_shakeTimer / _shakeDuration);
+            float t = _shakeDuration > 0f ? Mathf.Clamp01(_shakeTimer / _shakeDuration) : 0f;
             Vector2 offset = Random.insideUnitCircle * (_shakeIntensity * t);
             cameraHolder.localPosition = new Vector3(offset.x, offset.y, 0f);
         }
@@ -88,10 +88,10 @@ public class WeaponFeedbackController : MonoBehaviour
         if (_punchTimer > 0f)
         {
             _punchTimer -= Time.deltaTime;
-            float t = Mathf.Clamp01(_punchTimer / killPunchDuration);
+            float t = killPunchDuration > 0f ? Mathf.Clamp01(_punchTimer / killPunchDuration) : 0f;
             cameraController.PitchOffset = -killPunchAngle * t;
         }
-        else if (cameraController.PitchOffset != 0f)
+        else
         {
             cameraController.PitchOffset = 0f;
         }
@@ -134,7 +134,10 @@ public class WeaponFeedbackController : MonoBehaviour
 
         var weapon = weaponController.CurrentWeapon;
         if (weapon != null && weapon.muzzleFlashPrefab != null)
-            Instantiate(weapon.muzzleFlashPrefab, model.MuzzlePoint.position, model.MuzzlePoint.rotation);
+        {
+            var flash = Instantiate(weapon.muzzleFlashPrefab, model.MuzzlePoint.position, model.MuzzlePoint.rotation);
+            Destroy(flash, 0.1f);
+        }
 
         SpawnMuzzleLight(model.MuzzlePoint);
     }
@@ -155,7 +158,8 @@ public class WeaponFeedbackController : MonoBehaviour
     {
         var weapon = weaponController.CurrentWeapon;
         if (weapon == null || weapon.hitEffectPrefab == null) return;
-        Instantiate(weapon.hitEffectPrefab, hitPoint, Quaternion.LookRotation(hitNormal));
+        var hit = Instantiate(weapon.hitEffectPrefab, hitPoint, Quaternion.LookRotation(hitNormal));
+        Destroy(hit, 1f);
     }
 
     private void SpawnKillEffect(Vector3 hitPoint, Vector3 hitNormal)
@@ -165,7 +169,8 @@ public class WeaponFeedbackController : MonoBehaviour
             ? weapon.killEffectPrefab
             : killEffectPrefab;
         if (prefab == null) return;
-        Instantiate(prefab, hitPoint, Quaternion.LookRotation(hitNormal));
+        var kill = Instantiate(prefab, hitPoint, Quaternion.LookRotation(hitNormal));
+        Destroy(kill, 1.5f);
     }
 
     private void PlayFireSound()

@@ -22,6 +22,8 @@ namespace Tempest.Testing
 
         public bool TakeDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
         {
+            if (_currentHealth <= 0f) return false;
+
             _currentHealth -= damage;
             if (_currentHealth <= 0f)
             {
