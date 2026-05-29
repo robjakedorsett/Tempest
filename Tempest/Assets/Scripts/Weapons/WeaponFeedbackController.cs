@@ -117,7 +117,8 @@ public class WeaponFeedbackController : MonoBehaviour
         Shake(fireShakeIntensity, fireShakeDuration);
         SpawnMuzzleFlash();
         PlayFireSound();
-        if (weaponBob != null) weaponBob.TriggerRecoil();
+        if (weaponBob != null && weaponController.CurrentWeapon != null)
+            weaponBob.TriggerRecoil(weaponController.CurrentWeapon);
     }
 
     private void HandleHitConfirmed(Vector3 hitPoint, Vector3 hitNormal)

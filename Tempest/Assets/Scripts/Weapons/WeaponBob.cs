@@ -1,3 +1,4 @@
+using Tempest.Weapons;
 using UnityEngine;
 
 public class WeaponBob : MonoBehaviour
@@ -19,11 +20,6 @@ public class WeaponBob : MonoBehaviour
     [SerializeField] private float landMaxVelocity = 15f;
     [SerializeField] private float impactRecoverySpeed = 8f;
 
-    [Header("Fire Recoil")]
-    [SerializeField] private Vector3 recoilPositionKick = new(0f, 0.015f, -0.04f);
-    [SerializeField] private Vector3 recoilRotationKick = new(-4f, 0f, 0f);
-    [SerializeField] private float recoilRecoverySpeed = 12f;
-
     [Header("Settings")]
     [SerializeField] private float resetSmoothing = 5f;
     [SerializeField] private float speedThreshold = 0.1f;
@@ -37,8 +33,11 @@ public class WeaponBob : MonoBehaviour
     private Vector3 _impactOffset;
     private Vector3 _recoilOffset;
     private Vector3 _recoilRotation;
+    private float _recoilRecoverySpeed;
     private bool _wasGrounded;
     private float _lastFallSpeed;
+
+    public float RecoilMultiplier { get; set; } = 1f;
 
     private void Start()
     {
@@ -79,8 +78,8 @@ public class WeaponBob : MonoBehaviour
             bobOffset = Vector3.zero;
         }
 
-        _recoilOffset = Vector3.Lerp(_recoilOffset, Vector3.zero, Time.deltaTime * recoilRecoverySpeed);
-        _recoilRotation = Vector3.Lerp(_recoilRotation, Vector3.zero, Time.deltaTime * recoilRecoverySpeed);
+        _recoilOffset = Vector3.Lerp(_recoilOffset, Vector3.zero, Time.deltaTime * _recoilRecoverySpeed);
+        _recoilRotation = Vector3.Lerp(_recoilRotation, Vector3.zero, Time.deltaTime * _recoilRecoverySpeed);
 
         Vector3 target = _restPosition + bobOffset + _impactOffset + _recoilOffset;
         transform.localPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * resetSmoothing);
@@ -89,10 +88,12 @@ public class WeaponBob : MonoBehaviour
         _wasGrounded = grounded;
     }
 
-    public void TriggerRecoil()
+    public void TriggerRecoil(WeaponDefinition weapon)
     {
-        _recoilOffset += recoilPositionKick;
-        _recoilRotation += recoilRotationKick;
+        float m = RecoilMultiplier;
+        _recoilOffset += weapon.recoilPositionKick * m;
+        _recoilRotation += weapon.recoilRotationKick * m;
+        _recoilRecoverySpeed = weapon.recoilRecoverySpeed;
     }
 
     private void HandleImpacts(bool grounded)
