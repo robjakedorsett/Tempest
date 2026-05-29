@@ -140,7 +140,7 @@ public class PlayerWeaponController : MonoBehaviour
 
         var leafState = GetLeafState();
         if (leafState != null && leafState.StateKey.Equals(PlayerMovementStates.Run))
-            return false;
+            _input.SprintPressed = false;
 
         return true;
     }

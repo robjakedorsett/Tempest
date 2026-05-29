@@ -5,7 +5,7 @@ public class PlayerInput : MonoBehaviour
     [SerializeField] private float pressBufferTime = 0.2f;
 
     public Vector3 MovementInput { get; private set; } = Vector3.zero;
-    public bool SprintPressed { get; private set; }
+    public bool SprintPressed { get; set; }
     public bool CrouchPressed { get; private set; }
     public bool JumpHeld { get; private set; }
     public bool ShootHeld { get; private set; }
