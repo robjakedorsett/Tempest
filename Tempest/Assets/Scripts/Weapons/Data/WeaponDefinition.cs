@@ -20,6 +20,9 @@ namespace Tempest.Weapons
         public float reloadTime;
         public float range;
         public float spread;
+        public float bloomPerShot = 0.5f;
+        public float maxSpread = 8f;
+        public float bloomDecayRate = 5f;
         public FireMode fireMode;
 
         [Header("Prefab")]

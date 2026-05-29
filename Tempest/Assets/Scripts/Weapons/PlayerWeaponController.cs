@@ -30,6 +30,7 @@ public class PlayerWeaponController : MonoBehaviour
     private int _currentAmmo;
     private bool _isReloading;
     private float _reloadEndTime;
+    private float _currentSpread;
     private WeaponVisualController _visualController;
 
     public int CurrentAmmo => _currentAmmo;
@@ -45,6 +46,7 @@ public class PlayerWeaponController : MonoBehaviour
     public event Action<Vector3, Vector3> OnSurfaceImpact;
 
     public WeaponDefinition CurrentWeapon => _weapon;
+    public float CurrentSpread => _currentSpread;
 
     private void Awake()
     {
@@ -74,6 +76,7 @@ public class PlayerWeaponController : MonoBehaviour
         _currentAmmo = weapon.magazineSize;
         _nextFireTime = 0f;
         _isReloading = false;
+        _currentSpread = weapon.spread;
         OnAmmoChanged?.Invoke(_currentAmmo, weapon.magazineSize);
         _visualController?.SpawnWeapon(weapon);
     }
@@ -81,6 +84,9 @@ public class PlayerWeaponController : MonoBehaviour
     private void Update()
     {
         if (_weapon == null) return;
+
+        if (_currentSpread > _weapon.spread)
+            _currentSpread = Mathf.Max(_weapon.spread, _currentSpread - _weapon.bloomDecayRate * Time.deltaTime);
 
         if (_isReloading)
         {
@@ -173,6 +179,7 @@ public class PlayerWeaponController : MonoBehaviour
             : Time.time;
 
         OnWeaponFired?.Invoke();
+        _currentSpread = Mathf.Min(_weapon.maxSpread, _currentSpread + _weapon.bloomPerShot);
 
         Vector3 direction = GetSpreadDirection();
         bool hit = _sensor.CheckRay(cameraHolder, direction, debugMode);
@@ -238,10 +245,10 @@ public class PlayerWeaponController : MonoBehaviour
 
     private Vector3 GetSpreadDirection()
     {
-        if (_weapon.spread <= 0f)
+        if (_currentSpread <= 0f)
             return cameraHolder.forward;
 
-        float spreadRad = _weapon.spread * Mathf.Deg2Rad;
+        float spreadRad = _currentSpread * Mathf.Deg2Rad;
         Vector2 randomPoint = UnityEngine.Random.insideUnitCircle * Mathf.Tan(spreadRad);
 
         Vector3 direction = cameraHolder.forward
