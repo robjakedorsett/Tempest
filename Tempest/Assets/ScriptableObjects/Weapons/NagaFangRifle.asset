@@ -18,15 +18,15 @@ MonoBehaviour:
   slot: 0
   type: 0
   damage: 60
-  fireRate: 1.5
-  magazineSize: 8
+  fireRate: 5
+  magazineSize: 80
   reloadTime: 2
   range: 80
-  spread: 0.5
+  spread: 6
   fireMode: 1
-  weaponPrefab: {fileID: 0}
-  muzzleFlashPrefab: {fileID: 0}
-  hitEffectPrefab: {fileID: 0}
+  weaponPrefab: {fileID: 3076896810941492441, guid: f931738c9dff1de4d946e8ba4db550c3, type: 3}
+  muzzleFlashPrefab: {fileID: 2754695306468854295, guid: 8bc3f7fc1cec39548bfc6547df6e399a, type: 3}
+  hitEffectPrefab: {fileID: 2184590918726658981, guid: c997a630a9d2cd94f9c8aa765cbfedb1, type: 3}
   fireSound: {fileID: 0}
   reloadSound: {fileID: 0}
   unlockedByDefault: 1
