@@ -53,6 +53,7 @@ public class WeaponFeedbackController : MonoBehaviour
         weaponController.OnWeaponFired += HandleWeaponFired;
         weaponController.OnHitConfirmed += HandleHitConfirmed;
         weaponController.OnKillConfirmed += HandleKillConfirmed;
+        weaponController.OnSurfaceImpact += HandleSurfaceImpact;
     }
 
     private void OnDisable()
@@ -61,6 +62,7 @@ public class WeaponFeedbackController : MonoBehaviour
         weaponController.OnWeaponFired -= HandleWeaponFired;
         weaponController.OnHitConfirmed -= HandleHitConfirmed;
         weaponController.OnKillConfirmed -= HandleKillConfirmed;
+        weaponController.OnSurfaceImpact -= HandleSurfaceImpact;
     }
 
     private void Update()
@@ -121,6 +123,11 @@ public class WeaponFeedbackController : MonoBehaviour
         Shake(hitShakeIntensity, hitShakeDuration);
         SpawnHitEffect(hitPoint, hitNormal);
         PlaySound(impactAudioSource, hitSound);
+    }
+
+    private void HandleSurfaceImpact(Vector3 hitPoint, Vector3 hitNormal)
+    {
+        SpawnHitEffect(hitPoint, hitNormal);
     }
 
     private void HandleKillConfirmed(Vector3 hitPoint, Vector3 hitNormal)

@@ -42,6 +42,7 @@ public class PlayerWeaponController : MonoBehaviour
     public event Action OnWeaponFired;
     public event Action<Vector3, Vector3> OnHitConfirmed;
     public event Action<Vector3, Vector3> OnKillConfirmed;
+    public event Action<Vector3, Vector3> OnSurfaceImpact;
 
     public WeaponDefinition CurrentWeapon => _weapon;
 
@@ -191,7 +192,7 @@ public class PlayerWeaponController : MonoBehaviour
             }
             else
             {
-                OnHitConfirmed?.Invoke(hitInfo.point, hitInfo.normal);
+                OnSurfaceImpact?.Invoke(hitInfo.point, hitInfo.normal);
             }
 
             if (debugMode)
