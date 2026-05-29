@@ -82,8 +82,8 @@ public class WeaponBob : MonoBehaviour
             bobOffset = Vector3.zero;
         }
 
-        _recoilOffset = Vector3.Lerp(_recoilOffset, Vector3.zero, Time.deltaTime * _recoilRecoverySpeed);
-        _recoilRotation = Vector3.Lerp(_recoilRotation, Vector3.zero, Time.deltaTime * _recoilRecoverySpeed);
+        _recoilOffset = Vector3.Lerp(_recoilOffset, Vector3.zero, Time.deltaTime * recoilRecoverySpeed);
+        _recoilRotation = Vector3.Lerp(_recoilRotation, Vector3.zero, Time.deltaTime * recoilRecoverySpeed);
 
         Vector3 target = _restPosition + bobOffset + _impactOffset + _recoilOffset;
         transform.localPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * resetSmoothing);
