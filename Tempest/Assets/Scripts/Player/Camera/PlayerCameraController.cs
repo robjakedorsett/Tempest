@@ -17,6 +17,8 @@ public class PlayerCameraController : MonoBehaviour
     private float _pitch;
     private float _yaw;
 
+    public float PitchOffset { get; set; }
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -49,6 +51,6 @@ public class PlayerCameraController : MonoBehaviour
         transform.localRotation = Quaternion.Euler(0f, _yaw, 0f);
 
         if (cameraHolder != null)
-            cameraHolder.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
+            cameraHolder.localRotation = Quaternion.Euler(_pitch + PitchOffset, 0f, 0f);
     }
 }

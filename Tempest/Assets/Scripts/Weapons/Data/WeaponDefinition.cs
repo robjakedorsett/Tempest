@@ -28,6 +28,7 @@ namespace Tempest.Weapons
         [Header("Effects")]
         public GameObject muzzleFlashPrefab;
         public GameObject hitEffectPrefab;
+        public GameObject killEffectPrefab;
         public AudioClip fireSound;
         public AudioClip reloadSound;
 
