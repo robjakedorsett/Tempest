@@ -10,6 +10,7 @@ public class WeaponFeedbackController : MonoBehaviour
     [SerializeField] private PlayerCameraController cameraController;
     [SerializeField] private AudioSource weaponAudioSource;
     [SerializeField] private AudioSource impactAudioSource;
+    [SerializeField] private WeaponBob weaponBob;
 
     [Header("Screen Shake — Fire")]
     [SerializeField] private float fireShakeIntensity = 0.015f;
@@ -116,6 +117,7 @@ public class WeaponFeedbackController : MonoBehaviour
         Shake(fireShakeIntensity, fireShakeDuration);
         SpawnMuzzleFlash();
         PlayFireSound();
+        if (weaponBob != null) weaponBob.TriggerRecoil();
     }
 
     private void HandleHitConfirmed(Vector3 hitPoint, Vector3 hitNormal)

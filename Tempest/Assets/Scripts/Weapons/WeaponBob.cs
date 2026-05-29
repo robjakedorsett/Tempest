@@ -19,6 +19,11 @@ public class WeaponBob : MonoBehaviour
     [SerializeField] private float landMaxVelocity = 15f;
     [SerializeField] private float impactRecoverySpeed = 8f;
 
+    [Header("Fire Recoil")]
+    [SerializeField] private Vector3 recoilPositionKick = new(0f, 0.015f, -0.04f);
+    [SerializeField] private Vector3 recoilRotationKick = new(-4f, 0f, 0f);
+    [SerializeField] private float recoilRecoverySpeed = 12f;
+
     [Header("Settings")]
     [SerializeField] private float resetSmoothing = 5f;
     [SerializeField] private float speedThreshold = 0.1f;
@@ -30,6 +35,8 @@ public class WeaponBob : MonoBehaviour
     private float _swayTimer;
     private Vector3 _restPosition;
     private Vector3 _impactOffset;
+    private Vector3 _recoilOffset;
+    private Vector3 _recoilRotation;
     private bool _wasGrounded;
     private float _lastFallSpeed;
 
@@ -72,10 +79,20 @@ public class WeaponBob : MonoBehaviour
             bobOffset = Vector3.zero;
         }
 
-        Vector3 target = _restPosition + bobOffset + _impactOffset;
+        _recoilOffset = Vector3.Lerp(_recoilOffset, Vector3.zero, Time.deltaTime * recoilRecoverySpeed);
+        _recoilRotation = Vector3.Lerp(_recoilRotation, Vector3.zero, Time.deltaTime * recoilRecoverySpeed);
+
+        Vector3 target = _restPosition + bobOffset + _impactOffset + _recoilOffset;
         transform.localPosition = Vector3.Lerp(transform.localPosition, target, Time.deltaTime * resetSmoothing);
+        transform.localRotation = Quaternion.Euler(_recoilRotation);
 
         _wasGrounded = grounded;
+    }
+
+    public void TriggerRecoil()
+    {
+        _recoilOffset += recoilPositionKick;
+        _recoilRotation += recoilRotationKick;
     }
 
     private void HandleImpacts(bool grounded)
