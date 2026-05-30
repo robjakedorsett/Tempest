@@ -85,8 +85,13 @@ public class PlayerWeaponController : MonoBehaviour
     {
         if (_weapon == null) return;
 
-        if (_currentSpread > _weapon.spread)
-            _currentSpread = Mathf.Max(_weapon.spread, _currentSpread - _weapon.bloomDecayRate * Time.deltaTime);
+        float moveSpread = GetMovementSpread();
+        float baseSpread = _weapon.spread + moveSpread;
+
+        if (_currentSpread > baseSpread)
+            _currentSpread = Mathf.Max(baseSpread, _currentSpread - _weapon.bloomDecayRate * Time.deltaTime);
+        else
+            _currentSpread = baseSpread;
 
         if (_isReloading)
         {
@@ -241,6 +246,20 @@ public class PlayerWeaponController : MonoBehaviour
     {
         _isReloading = false;
         OnReloadStateChanged?.Invoke(false);
+    }
+
+    private float GetMovementSpread()
+    {
+        var motor = _stateMachine.Context?.Motor;
+        if (motor == null || !motor.IsGrounded) return 0f;
+
+        float speed = motor.HorizontalSpeed;
+        if (speed <= 0.1f) return 0f;
+
+        if (speed > motor.WalkSpeed)
+            return _weapon.moveSpreadSprint;
+
+        return _weapon.moveSpreadWalk * (speed / motor.WalkSpeed);
     }
 
     private Vector3 GetSpreadDirection()

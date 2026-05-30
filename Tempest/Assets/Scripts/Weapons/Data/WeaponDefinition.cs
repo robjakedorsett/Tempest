@@ -23,6 +23,8 @@ namespace Tempest.Weapons
         public float bloomPerShot = 0.5f;
         public float maxSpread = 8f;
         public float bloomDecayRate = 5f;
+        public float moveSpreadWalk = 1.5f;
+        public float moveSpreadSprint = 3f;
         public FireMode fireMode;
 
         [Header("Recoil")]
