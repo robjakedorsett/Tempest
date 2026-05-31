@@ -17,7 +17,10 @@ public class HealthHUD : MonoBehaviour
 
         GameEventBus.OnPlayerDamaged += HandleHealthChanged;
         GameEventBus.OnPlayerRevived += HandleRevived;
+    }
 
+    private void Start()
+    {
         UpdateDisplay();
     }
 
