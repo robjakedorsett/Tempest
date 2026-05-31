@@ -55,11 +55,17 @@ public abstract class BaseState<EState, TContext>
                 if (SubStates.ContainsKey(transition.To))
                 {
                     if (SubState != null && SubState.StateKey.Equals(transition.To))
-                    {
                         continue;
-                    }
 
                     SetSubState(transition.To);
+                    return;
+                }
+                else if (SuperState != null && SuperState.SubStates.ContainsKey(transition.To))
+                {
+                    if (SuperState.SubState != null && SuperState.SubState.StateKey.Equals(transition.To))
+                        continue;
+
+                    SuperState.SetSubState(transition.To);
                     return;
                 }
                 else
