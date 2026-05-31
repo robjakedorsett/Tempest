@@ -20,6 +20,7 @@ MonoBehaviour:
   attackRange: 2.5
   attackCooldown: 1.8
   detectionRadius: 18
+  roamRadius: 10
   xpValue: 50
   deathEffectPrefab: {fileID: 0}
   hitEffectPrefab: {fileID: 0}

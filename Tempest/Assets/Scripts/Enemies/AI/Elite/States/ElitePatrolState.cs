@@ -1,14 +1,14 @@
-using Tempest.AI;
 using Tempest.Enemies.Enums;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Tempest.Enemies.Elite
 {
     public class ElitePatrolState : BaseState<EnemyStates, EnemyContext>
     {
-        private readonly PatrolPath _patrolPath;
         private readonly SphereSensor _detectionSensor;
         private readonly Transform _transform;
+        private readonly Vector3 _spawnOrigin;
 
         private bool _playerDetected;
 
@@ -16,13 +16,12 @@ namespace Tempest.Enemies.Elite
 
         public ElitePatrolState(
             StateMachine<EnemyStates, EnemyContext> stateMachine,
-            PatrolPath patrolPath,
             SphereSensor detectionSensor)
             : base(EnemyStates.Patrol, stateMachine)
         {
-            _patrolPath = patrolPath;
             _detectionSensor = detectionSensor;
             _transform = stateMachine.transform;
+            _spawnOrigin = _transform.position;
         }
 
         public override void EnterState()
@@ -33,8 +32,7 @@ namespace Tempest.Enemies.Elite
             float patrolSpeed = Context.Definition.moveSpeed * 0.5f;
             Context.Agent.Initialize(patrolSpeed);
 
-            if (_patrolPath != null && _patrolPath.CurrentWaypoint != null)
-                Context.Agent.SetDestination(_patrolPath.CurrentWaypoint.position);
+            PickRoamDestination();
         }
 
         public override void FrameUpdate()
@@ -53,13 +51,25 @@ namespace Tempest.Enemies.Elite
                 }
             }
 
-            if (_patrolPath == null) return;
-
             if (Context.Agent.IsAtDestination())
+                PickRoamDestination();
+        }
+
+        private void PickRoamDestination()
+        {
+            float radius = Context.Definition.roamRadius;
+
+            for (int i = 0; i < 10; i++)
             {
-                Transform next = _patrolPath.AdvanceWaypoint();
-                if (next != null)
-                    Context.Agent.SetDestination(next.position);
+                Vector3 randomDir = Random.insideUnitSphere * radius;
+                randomDir.y = 0f;
+                Vector3 candidate = _spawnOrigin + randomDir;
+
+                if (NavMesh.SamplePosition(candidate, out NavMeshHit hit, 2f, NavMesh.AllAreas))
+                {
+                    Context.Agent.SetDestination(hit.position);
+                    return;
+                }
             }
         }
 

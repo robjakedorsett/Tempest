@@ -1,4 +1,3 @@
-using Tempest.AI;
 using Tempest.Enemies.Enums;
 using UnityEngine;
 
@@ -9,7 +8,6 @@ namespace Tempest.Enemies.Elite
     public class EliteEnemyStateMachine : StateMachine<EnemyStates, EnemyContext>
     {
         [SerializeField] private EnemyDefinition definition;
-        [SerializeField] private PatrolPath patrolPath;
 
         private SphereSensor _detectionSensor;
 
@@ -32,7 +30,7 @@ namespace Tempest.Enemies.Elite
 
             var spawn = new SpawnState(this);
             var active = new EliteActiveState(this);
-            var patrol = new ElitePatrolState(this, patrolPath, _detectionSensor);
+            var patrol = new ElitePatrolState(this, _detectionSensor);
             var chase = new EliteChaseState(this);
             var attack = new EliteAttackState(this);
             var death = new DeathState(this);
@@ -45,13 +43,11 @@ namespace Tempest.Enemies.Elite
             active.AddSubState(chase);
             active.AddSubState(attack);
 
-            // Top-level: Spawn → Active
             spawn.FromThis()
                 .To(EnemyStates.Active)
                 .When(() => spawn.IsComplete)
                 .Build();
 
-            // Top-level: Any → Death
             spawn.FromThis()
                 .To(EnemyStates.Death)
                 .When(() => Context.Health.IsDead)
@@ -62,25 +58,21 @@ namespace Tempest.Enemies.Elite
                 .When(() => Context.Health.IsDead)
                 .Build();
 
-            // Sub-state: Patrol → Chase (player detected)
             patrol.FromThis()
                 .To(EnemyStates.Chase)
                 .When(() => patrol.PlayerDetected)
                 .Build();
 
-            // Sub-state: Chase → Attack (in range)
             chase.FromThis()
                 .To(EnemyStates.Attack)
                 .When(() => chase.InAttackRange)
                 .Build();
 
-            // Sub-state: Attack → Chase (attack complete)
             attack.FromThis()
                 .To(EnemyStates.Chase)
                 .When(() => attack.AttackComplete)
                 .Build();
 
-            // Sub-state: Chase → Patrol (target lost)
             chase.FromThis()
                 .To(EnemyStates.Patrol)
                 .When(() => chase.TargetLost)
@@ -89,9 +81,6 @@ namespace Tempest.Enemies.Elite
 
         private void Start()
         {
-            if (patrolPath == null)
-                Debug.LogWarning($"[{name}] No PatrolPath assigned — elite will idle in place.");
-
             SetInitialState(EnemyStates.Spawn);
         }
 
@@ -100,8 +89,13 @@ namespace Tempest.Enemies.Elite
         {
             if (definition == null) return;
 
+            // Detection radius (orange)
             Gizmos.color = new Color(1f, 0.5f, 0f, 0.15f);
             Gizmos.DrawWireSphere(transform.position, definition.detectionRadius);
+
+            // Roam radius (cyan)
+            Gizmos.color = new Color(0f, 1f, 1f, 0.2f);
+            Gizmos.DrawWireSphere(transform.position, definition.roamRadius);
 
             if (Application.isPlaying)
             {
