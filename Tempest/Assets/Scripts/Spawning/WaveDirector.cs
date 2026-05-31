@@ -185,8 +185,14 @@ namespace Tempest.Spawning
 
         private IEnumerator FinaleSequence()
         {
-            // Implemented in Task 5
-            yield break;
+            _isSpawning = true;
+            _swarmCount++;
+            _currentSwarmActiveCount = 0;
+            GameEventBus.RaiseSwarmStarted(_swarmCount);
+
+            yield return StartCoroutine(ExecuteSwarm(_swarmCount, true));
+
+            _isSpawning = false;
         }
 
         private void SpawnEnemy(EnemyTier tier, Vector3 position)
