@@ -31,6 +31,7 @@ namespace Tempest.Spawning
             GameEventBus.OnEnemyKilled -= HandleEnemyKilled;
         }
 
+        [ContextMenu("Start Spawning")]
         public void StartSpawning()
         {
             if (_isSpawning) return;
@@ -39,6 +40,7 @@ namespace Tempest.Spawning
             _swarmCoroutine = StartCoroutine(SwarmLoop());
         }
 
+        [ContextMenu("Stop Spawning")]
         public void StopSpawning()
         {
             _isSpawning = false;
@@ -46,6 +48,7 @@ namespace Tempest.Spawning
             if (_swarmCoroutine != null) StopCoroutine(_swarmCoroutine);
         }
 
+        [ContextMenu("Trigger Finale")]
         public void TriggerFinale()
         {
             if (!_isSpawning) return;
