@@ -59,7 +59,7 @@ namespace Tempest.Enemies
             return false;
         }
 
-        private void Die()
+        public void Die()
         {
             _isDead = true;
             GameEventBus.RaiseEnemyKilled(_xpValue);
