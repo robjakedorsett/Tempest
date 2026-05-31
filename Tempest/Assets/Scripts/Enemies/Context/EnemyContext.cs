@@ -12,5 +12,6 @@ namespace Tempest.Enemies
         public EnemyHealth Health { get; set; }
         public NaturalAgent Agent { get; set; }
         public EnemyDefinition Definition { get; set; }
+        public PlayerHealth Target { get; set; }
     }
 }

@@ -14,6 +14,16 @@ public class PlayerHealth : MonoBehaviour, IDamageable
         CurrentHealth = maxHealth;
     }
 
+    private void OnEnable()
+    {
+        PlayerRegistry.Register(this);
+    }
+
+    private void OnDisable()
+    {
+        PlayerRegistry.Unregister(this);
+    }
+
     public bool TakeDamage(float damage, Vector3 hitPoint, Vector3 hitNormal)
     {
         if (IsDown) return false;
