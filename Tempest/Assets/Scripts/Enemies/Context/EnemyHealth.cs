@@ -45,10 +45,9 @@ namespace Tempest.Enemies
         {
             if (_isDead) return false;
 
-            _currentHealth -= damage;
+            _currentHealth = Mathf.Max(0f, _currentHealth - damage);
 
             SpawnHitEffect(hitPoint, hitNormal);
-            StartCoroutine(HitFlash());
 
             if (_currentHealth <= 0f)
             {
@@ -56,6 +55,7 @@ namespace Tempest.Enemies
                 return true;
             }
 
+            StartCoroutine(HitFlash());
             return false;
         }
 

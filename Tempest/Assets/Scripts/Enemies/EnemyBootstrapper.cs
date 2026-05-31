@@ -6,7 +6,7 @@ namespace Tempest.Enemies
     {
         [SerializeField] private EnemyDefinition definition;
 
-        private void Awake()
+        private void Start()
         {
             var health = GetComponent<EnemyHealth>();
             var agent = GetComponent<NaturalAgent>();
