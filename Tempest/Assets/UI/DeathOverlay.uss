@@ -1,0 +1,57 @@
+.death-overlay {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    align-items: center;
+    justify-content: center;
+    display: none;
+}
+
+.death-overlay--visible {
+    display: flex;
+}
+
+.death-title {
+    font-size: 48px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    margin-bottom: 16px;
+}
+
+.death-subtitle {
+    font-size: 24px;
+    color: rgb(180, 180, 180);
+    margin-bottom: 32px;
+    display: none;
+}
+
+.death-subtitle--visible {
+    display: flex;
+}
+
+.restart-button {
+    font-size: 24px;
+    color: rgb(255, 255, 255);
+    -unity-font-style: bold;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgb(255, 255, 255);
+    border-width: 2px;
+    border-radius: 4px;
+    padding: 12px 32px;
+    display: none;
+}
+
+.restart-button--visible {
+    display: flex;
+}
+
+.restart-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.restart-button:active {
+    background-color: rgba(255, 255, 255, 0.3);
+}

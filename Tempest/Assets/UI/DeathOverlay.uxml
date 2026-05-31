@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="DeathOverlay.uss" />
+    <ui:VisualElement name="death-overlay" class="death-overlay" picking-mode="Ignore">
+        <ui:Label name="death-title" class="death-title" text="DOWNED" picking-mode="Ignore" />
+        <ui:Label name="death-subtitle" class="death-subtitle" text="Waiting for revive..." picking-mode="Ignore" />
+        <ui:Button name="restart-button" class="restart-button" text="RESTART" />
+    </ui:VisualElement>
+</ui:UXML>
