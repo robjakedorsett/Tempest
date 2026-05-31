@@ -9,8 +9,6 @@ namespace Tempest.Enemies.Elite
     {
         [SerializeField] private EnemyDefinition definition;
 
-        private SphereSensor _detectionSensor;
-
         protected override void Awake()
         {
             var health = GetComponent<EnemyHealth>();
@@ -20,17 +18,11 @@ namespace Tempest.Enemies.Elite
 
             Context = new EnemyContext(health, agent, definition);
 
-            _detectionSensor = new SphereSensor(
-                LayerConstants.Player,
-                definition.detectionRadius,
-                transform,
-                Vector3.zero);
-
             base.Awake();
 
             var spawn = new SpawnState(this);
             var active = new EliteActiveState(this);
-            var patrol = new ElitePatrolState(this, _detectionSensor);
+            var patrol = new ElitePatrolState(this);
             var chase = new EliteChaseState(this);
             var attack = new EliteAttackState(this);
             var death = new DeathState(this);

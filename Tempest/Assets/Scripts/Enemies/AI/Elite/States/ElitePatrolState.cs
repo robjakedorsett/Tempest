@@ -6,7 +6,6 @@ namespace Tempest.Enemies.Elite
 {
     public class ElitePatrolState : BaseState<EnemyStates, EnemyContext>
     {
-        private readonly SphereSensor _detectionSensor;
         private readonly Transform _transform;
         private readonly Vector3 _spawnOrigin;
 
@@ -14,12 +13,9 @@ namespace Tempest.Enemies.Elite
 
         public bool PlayerDetected => _playerDetected;
 
-        public ElitePatrolState(
-            StateMachine<EnemyStates, EnemyContext> stateMachine,
-            SphereSensor detectionSensor)
+        public ElitePatrolState(StateMachine<EnemyStates, EnemyContext> stateMachine)
             : base(EnemyStates.Patrol, stateMachine)
         {
-            _detectionSensor = detectionSensor;
             _transform = stateMachine.transform;
             _spawnOrigin = _transform.position;
         }
@@ -48,19 +44,25 @@ namespace Tempest.Enemies.Elite
             base.FrameUpdate();
             if (IsExitingState) return;
 
-            _detectionSensor.Monitor();
-            if (_detectionSensor.Hit)
-            {
-                AcquireTarget();
-                if (Context.Target != null)
-                {
-                    _playerDetected = true;
-                    return;
-                }
-            }
+            if (!_playerDetected)
+                CheckForPlayers();
 
             if (Context.Agent.IsAtDestination())
                 PickRoamDestination();
+        }
+
+        private void CheckForPlayers()
+        {
+            PlayerHealth nearest = PlayerRegistry.GetNearestPlayer(_transform.position);
+            if (nearest == null || nearest.IsDown) return;
+
+            float dist = Vector3.Distance(_transform.position, nearest.transform.position);
+            if (dist <= Context.Definition.detectionRadius)
+            {
+                Context.Target = nearest;
+                PlayerRegistry.AssignTarget(nearest);
+                _playerDetected = true;
+            }
         }
 
         private void HandleDamageTaken()
@@ -90,19 +92,6 @@ namespace Tempest.Enemies.Elite
                     Context.Agent.SetDestination(hit.position);
                     return;
                 }
-            }
-        }
-
-        private void AcquireTarget()
-        {
-            PlayerHealth nearest = PlayerRegistry.GetNearestPlayer(_transform.position);
-            if (nearest == null || nearest.IsDown) return;
-
-            float dist = Vector3.Distance(_transform.position, nearest.transform.position);
-            if (dist <= Context.Definition.detectionRadius)
-            {
-                Context.Target = nearest;
-                PlayerRegistry.AssignTarget(nearest);
             }
         }
     }
