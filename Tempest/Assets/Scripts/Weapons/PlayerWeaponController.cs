@@ -254,7 +254,10 @@ public class PlayerWeaponController : MonoBehaviour
         OnReloadStateChanged?.Invoke(true);
 
         if (_weapon.reloadSound != null && weaponAudioSource != null)
-            weaponAudioSource.PlayOneShot(_weapon.reloadSound);
+        {
+            weaponAudioSource.clip = _weapon.reloadSound;
+            weaponAudioSource.Play();
+        }
     }
 
     private void CompleteReload()
@@ -269,6 +272,9 @@ public class PlayerWeaponController : MonoBehaviour
     {
         _isReloading = false;
         OnReloadStateChanged?.Invoke(false);
+
+        if (weaponAudioSource != null && weaponAudioSource.clip == _weapon?.reloadSound)
+            weaponAudioSource.Stop();
     }
 
     private float GetMovementSpread()
