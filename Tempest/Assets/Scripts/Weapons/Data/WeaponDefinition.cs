@@ -27,6 +27,9 @@ namespace Tempest.Weapons
         public float moveSpreadSprint = 3f;
         public FireMode fireMode;
 
+        [Header("Handling")]
+        public float equipTime = 0.25f;
+
         [Header("Recoil")]
         [Range(0f, 2f)]
         public float recoil = 1f;

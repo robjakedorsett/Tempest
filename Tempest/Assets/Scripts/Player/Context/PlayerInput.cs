@@ -24,6 +24,12 @@ public class PlayerInput : MonoBehaviour
     private float _lastReloadTime = -999f;
     private bool _reloadConsumed;
 
+    private float _lastWeapon1Time = -999f;
+    private bool _weapon1Consumed;
+    private float _lastWeapon2Time = -999f;
+    private bool _weapon2Consumed;
+    private float _switchWeaponValue;
+
     public bool JumpPressed
     {
         get
@@ -59,6 +65,26 @@ public class PlayerInput : MonoBehaviour
             return Time.time - _lastReloadTime <= pressBufferTime;
         }
     }
+
+    public bool Weapon1Pressed
+    {
+        get
+        {
+            if (_weapon1Consumed) return false;
+            return Time.time - _lastWeapon1Time <= pressBufferTime;
+        }
+    }
+
+    public bool Weapon2Pressed
+    {
+        get
+        {
+            if (_weapon2Consumed) return false;
+            return Time.time - _lastWeapon2Time <= pressBufferTime;
+        }
+    }
+
+    public float SwitchWeaponValue => _switchWeaponValue;
 
     public InputSystem_Actions InputActions { get; private set; }
 
@@ -114,6 +140,23 @@ public class PlayerInput : MonoBehaviour
             _reloadConsumed = false;
             _lastReloadTime = Time.time;
         };
+
+        InputActions.Player.Previous.performed += _ =>
+        {
+            _weapon1Consumed = false;
+            _lastWeapon1Time = Time.time;
+        };
+
+        InputActions.Player.Next.performed += _ =>
+        {
+            _weapon2Consumed = false;
+            _lastWeapon2Time = Time.time;
+        };
+
+        InputActions.Player.SwitchWeapon.performed += ctx =>
+            _switchWeaponValue = ctx.ReadValue<float>();
+        InputActions.Player.SwitchWeapon.canceled += _ =>
+            _switchWeaponValue = 0f;
     }
 
     public void ConsumeJump() => _jumpConsumed = true;
@@ -121,4 +164,7 @@ public class PlayerInput : MonoBehaviour
     public void ConsumeShoot() => _shootConsumed = true;
     public void ConsumeInteract() => _interactConsumed = true;
     public void ConsumeReload() => _reloadConsumed = true;
+    public void ConsumeWeapon1() => _weapon1Consumed = true;
+    public void ConsumeWeapon2() => _weapon2Consumed = true;
+    public void ConsumeSwitchWeapon() => _switchWeaponValue = 0f;
 }

@@ -12,7 +12,6 @@ public class PlayerWeaponController : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform cameraHolder;
     [SerializeField] private LayerMask hitLayers;
-    [SerializeField] private WeaponDefinition startingWeapon;
 
     [Header("Debug")]
     [SerializeField] private bool debugMode;
@@ -37,6 +36,7 @@ public class PlayerWeaponController : MonoBehaviour
     public int MaxAmmo => _weapon != null ? _weapon.magazineSize : 0;
     public bool HasWeapon => _weapon != null;
     public bool IsReloading => _isReloading;
+    public bool IsEquipping { get; set; }
 
     public event Action<int, int> OnAmmoChanged;
     public event Action<bool> OnReloadStateChanged;
@@ -59,13 +59,6 @@ public class PlayerWeaponController : MonoBehaviour
             Debug.LogError("[WeaponController] cameraHolder not assigned.", this);
     }
 
-    private void Start()
-    {
-        var weapon = _stateMachine.Context?.Loadout?.PrimaryWeapon ?? startingWeapon;
-        if (weapon != null)
-            EquipWeapon(weapon);
-    }
-
     public void EquipWeapon(WeaponDefinition weapon)
     {
         if (_isReloading)
@@ -79,6 +72,35 @@ public class PlayerWeaponController : MonoBehaviour
         _currentSpread = weapon.spread;
         OnAmmoChanged?.Invoke(_currentAmmo, weapon.magazineSize);
         _visualController?.SpawnWeapon(weapon);
+    }
+
+    public void EquipFromState(WeaponRuntimeState state)
+    {
+        if (_isReloading)
+            OnReloadStateChanged?.Invoke(false);
+
+        _weapon = state.definition;
+        _sensor = new RaycastSensor(state.definition.range, hitLayers);
+        _currentAmmo = state.currentAmmo;
+        _currentSpread = state.currentSpread;
+        _nextFireTime = 0f;
+        _isReloading = false;
+        OnAmmoChanged?.Invoke(_currentAmmo, state.definition.magazineSize);
+        OnReloadStateChanged?.Invoke(false);
+        _visualController?.SpawnWeapon(state.definition);
+    }
+
+    public WeaponRuntimeState SaveState()
+    {
+        if (_isReloading)
+            CancelReload();
+
+        return new WeaponRuntimeState
+        {
+            definition = _weapon,
+            currentAmmo = _currentAmmo,
+            currentSpread = _currentSpread
+        };
     }
 
     private void Update()
@@ -146,6 +168,7 @@ public class PlayerWeaponController : MonoBehaviour
         if (_weapon == null) return false;
         if (cameraHolder == null) return false;
         if (_health.IsDown) return false;
+        if (IsEquipping) return false;
 
         return true;
     }
