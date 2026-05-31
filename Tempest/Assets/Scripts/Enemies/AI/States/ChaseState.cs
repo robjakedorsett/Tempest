@@ -42,14 +42,22 @@ namespace Tempest.Enemies
 
         public override void ExitState()
         {
+            PlayerRegistry.ReleaseTarget(Context.Target);
             base.ExitState();
             Context.Agent.Stop();
         }
 
         private void FindTarget()
         {
-            Context.Target = PlayerRegistry.GetNearestPlayer(
+            var previous = Context.Target;
+            Context.Target = PlayerRegistry.GetBestTarget(
                 StateMachine.transform.position);
+
+            if (Context.Target != previous)
+            {
+                PlayerRegistry.ReleaseTarget(previous);
+                PlayerRegistry.AssignTarget(Context.Target);
+            }
         }
     }
 }
