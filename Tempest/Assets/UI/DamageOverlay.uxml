@@ -1,0 +1,4 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <Style src="DamageOverlay.uss" />
+    <ui:VisualElement name="damage-vignette" class="damage-vignette" picking-mode="Ignore" />
+</ui:UXML>
