@@ -205,9 +205,34 @@ Three currencies max. More than that and it starts feeling like a spreadsheet.
 
 ## 9. Procedural Generation
 
-### Level Structure
+### Two-Layer Approach
 
-Each expedition is built from **tiles/modules** — pre-designed room chunks assembled procedurally into a connected layout.
+Generation is split into two layers with different strategies:
+
+**Layer 1: Geometry (offline, tool-assisted, human-curated)**
+
+Level layouts are assembled from room tiles by an editor tool, then baked into playable scenes. These are not generated at runtime — they're pre-validated maps with baked NavMesh, tested sightlines, and no stuck spots. The tool accelerates authoring but a human curates and playtests the output.
+
+- Build a library of validated maps per biome (target: 15-30 per biome for variety)
+- Game picks a map from the pool each run
+- Room tiles are hand-crafted; the tool handles assembly and connection logic
+- Output is a normal Unity scene — fully testable in editor
+
+**Layer 2: Gameplay content (runtime-randomized)**
+
+Each run randomizes what populates the baked map:
+
+- Enemy spawn rift placement and composition
+- Blessing shrine locations
+- Loot distribution
+- Objective type and location
+- Environmental hazards (which rooms are flooded, which bridges are broken, where the lava flows)
+
+These place dynamically on pre-validated anchor points in the map. This is where run-to-run replayability lives.
+
+### Why Not Full Runtime Procgen
+
+Full runtime geometry generation (ala Deep Rock Galactic) gives infinite layouts but costs months of edge-case debugging — NavMesh holes, unreachable areas, broken sightlines, spawns in walls. For a small team, baked maps with randomized content provides "enough" variety for hundreds of hours (Hades, Gunfire Reborn, and Dead Cells all ship this way) while staying testable and reliable.
 
 ### Per-Biome Generation
 
@@ -217,24 +242,34 @@ Each expedition is built from **tiles/modules** — pre-designed room chunks ass
 | **Jungle Ruins** | Open hub areas connected by paths | Explorative, vertical, flanking routes |
 | **Volcanic Caverns** | Sprawling cave networks | Open, hazardous, most dangerous terrain |
 
-### What Varies Per Run
+### What Varies Per Run (Runtime Layer)
 
-- Room layout and connections
-- Enemy spawn composition and placement
+- Enemy spawn rift positions and wave composition
 - Blessing shrine locations
 - Loot distribution
 - Objective type and location
-- Environmental hazards (which rooms are flooded, which bridges are broken, where the lava flows)
+- Environmental hazards
 
 ### What Stays Consistent
 
+- Map geometry (baked, pre-validated)
 - Biome art and theme per mission
 - Difficulty scales with depth (further from drop = harder)
 - Extraction always requires backtracking or a new path out — never trivial
 
+### Map Builder Tool
+
+An editor tool for assembling maps from room tiles:
+
+- Procedurally assembles tile layouts based on biome rules
+- Outputs a Unity scene with baked NavMesh
+- Human reviews, adjusts, playtests before adding to the map pool
+- Places anchor points for runtime content (rift origins, shrine slots, loot zones)
+- Validates connectivity (all areas reachable), NavMesh coverage, and spawn distances
+
 ### Prototype Approach
 
-Generation doesn't need to be sophisticated at prototype stage. Hand-crafted rooms shuffled into random orders gives plenty of variety. Refinement comes later.
+For the prototype, hand-craft 1-2 rooms. Spawners, pickups, and blessings randomize at runtime within those rooms. The map builder tool comes later as a production accelerator — not needed to prove the fun.
 
 ---
 
