@@ -16,6 +16,7 @@ namespace Tempest.Enemies
         public float damage = 10f;
         public float attackRange = 2f;
         public float attackCooldown = 1f;
+        public float detectionRadius = 10f;
 
         [Header("Rewards")]
         public int xpValue = 10;

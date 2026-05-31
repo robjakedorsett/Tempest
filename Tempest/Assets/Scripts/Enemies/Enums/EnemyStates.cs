@@ -9,6 +9,7 @@ namespace Tempest.Enemies.Enums
         Death,
         Patrol,
         Charge,
-        Retreat
+        Retreat,
+        Active
     }
 }
