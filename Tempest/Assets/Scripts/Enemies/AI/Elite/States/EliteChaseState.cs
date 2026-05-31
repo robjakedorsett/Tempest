@@ -10,6 +10,7 @@ namespace Tempest.Enemies.Elite
         private readonly Transform _transform;
         private float _lostTimer;
         private bool _targetLost;
+        private Vector3 _approachOffset;
 
         public bool TargetLost => _targetLost;
         public bool InAttackRange { get; private set; }
@@ -26,6 +27,7 @@ namespace Tempest.Enemies.Elite
             _lostTimer = 0f;
             _targetLost = false;
             InAttackRange = false;
+            GenerateApproachOffset();
 
             Context.Agent.Initialize(Context.Definition.moveSpeed);
         }
@@ -42,7 +44,7 @@ namespace Tempest.Enemies.Elite
             }
 
             Vector3 targetPos = Context.Target.transform.position;
-            Context.Agent.SetDestination(targetPos);
+            Context.Agent.SetDestination(targetPos + _approachOffset);
 
             float dist = Vector3.Distance(_transform.position, targetPos);
             InAttackRange = dist <= Context.Definition.attackRange;
@@ -76,6 +78,7 @@ namespace Tempest.Enemies.Elite
             {
                 Context.Target = newTarget;
                 PlayerRegistry.AssignTarget(newTarget);
+                GenerateApproachOffset();
                 _lostTimer = 0f;
             }
             else
@@ -83,6 +86,13 @@ namespace Tempest.Enemies.Elite
                 _targetLost = true;
                 Context.Target = null;
             }
+        }
+
+        private void GenerateApproachOffset()
+        {
+            float radius = Context.Definition.attackRange * 0.6f;
+            Vector2 circle = Random.insideUnitCircle * radius;
+            _approachOffset = new Vector3(circle.x, 0f, circle.y);
         }
     }
 }

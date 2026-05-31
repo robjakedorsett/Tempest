@@ -7,6 +7,7 @@ namespace Tempest.Enemies
     {
         private const float RetargetInterval = 1.5f;
         private float _retargetTimer;
+        private Vector3 _approachOffset;
 
         public ChaseState(StateMachine<EnemyStates, EnemyContext> stateMachine)
             : base(EnemyStates.Chase, stateMachine) { }
@@ -19,6 +20,7 @@ namespace Tempest.Enemies
             Context.Agent.Initialize(Context.Definition.moveSpeed * speedVariance);
 
             FindTarget();
+            GenerateApproachOffset();
             _retargetTimer = RetargetInterval;
         }
 
@@ -31,11 +33,12 @@ namespace Tempest.Enemies
             if (_retargetTimer <= 0f)
             {
                 FindTarget();
+                GenerateApproachOffset();
                 _retargetTimer = RetargetInterval;
             }
 
             if (Context.Target != null)
-                Context.Agent.SetDestination(Context.Target.transform.position);
+                Context.Agent.SetDestination(Context.Target.transform.position + _approachOffset);
             else
                 Context.Agent.Stop();
         }
@@ -58,6 +61,13 @@ namespace Tempest.Enemies
                 PlayerRegistry.ReleaseTarget(previous);
                 PlayerRegistry.AssignTarget(Context.Target);
             }
+        }
+
+        private void GenerateApproachOffset()
+        {
+            float radius = Context.Definition.attackRange * 0.6f;
+            Vector2 circle = Random.insideUnitCircle * radius;
+            _approachOffset = new Vector3(circle.x, 0f, circle.y);
         }
     }
 }
