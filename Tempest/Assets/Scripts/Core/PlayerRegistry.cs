@@ -15,6 +15,8 @@ public static class PlayerRegistry
         _targetCounts.Clear();
     }
 
+    public static int PlayerCount => _players.Count;
+
     public static void Register(PlayerHealth player)
     {
         _players.Add(player);
@@ -50,6 +52,26 @@ public static class PlayerRegistry
         if (player == null) return 0;
         _targetCounts.TryGetValue(player, out int count);
         return count;
+    }
+
+    public static PlayerHealth GetNearestPlayer(Vector3 position)
+    {
+        PlayerHealth nearest = null;
+        float nearestDist = float.MaxValue;
+
+        foreach (var player in _players)
+        {
+            if (player.IsDown) continue;
+
+            float dist = Vector3.Distance(position, player.transform.position);
+            if (dist < nearestDist)
+            {
+                nearestDist = dist;
+                nearest = player;
+            }
+        }
+
+        return nearest;
     }
 
     public static PlayerHealth GetBestTarget(Vector3 position)

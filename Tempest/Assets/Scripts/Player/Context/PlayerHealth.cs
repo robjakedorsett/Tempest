@@ -50,6 +50,9 @@ public class PlayerHealth : MonoBehaviour, IDamageable
     {
         IsDown = true;
         GameEventBus.RaisePlayerDowned();
+
+        if (PlayerRegistry.GetNearestPlayer(Vector3.zero) == null)
+            GameEventBus.RaiseRunFailed();
     }
 
     public void Revive(float healthPercent = 0.5f)
