@@ -15,7 +15,6 @@ namespace Tempest.Enemies
             var agent = GetComponent<NaturalAgent>();
 
             health.Initialize(definition);
-            agent.Initialize(definition.moveSpeed);
 
             Context = new EnemyContext(health, agent, definition);
 

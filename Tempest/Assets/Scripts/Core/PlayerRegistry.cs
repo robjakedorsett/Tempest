@@ -5,6 +5,9 @@ public static class PlayerRegistry
 {
     private static readonly HashSet<PlayerHealth> _players = new();
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    private static void Reset() => _players.Clear();
+
     public static void Register(PlayerHealth player)
     {
         _players.Add(player);

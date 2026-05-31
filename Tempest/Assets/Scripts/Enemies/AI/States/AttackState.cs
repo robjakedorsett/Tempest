@@ -1,5 +1,4 @@
 using Tempest.Enemies.Enums;
-using Tempest.Weapons;
 using UnityEngine;
 
 namespace Tempest.Enemies
@@ -51,13 +50,10 @@ namespace Tempest.Enemies
 
         private void DealDamage()
         {
-            var damageable = Context.Target.GetComponent<IDamageable>();
-            if (damageable == null) return;
-
             Vector3 hitDir = (Context.Target.transform.position - StateMachine.transform.position).normalized;
             Vector3 hitPoint = Context.Target.transform.position;
 
-            damageable.TakeDamage(Context.Definition.damage, hitPoint, -hitDir);
+            Context.Target.TakeDamage(Context.Definition.damage, hitPoint, -hitDir);
         }
     }
 }

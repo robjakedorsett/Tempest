@@ -61,6 +61,7 @@ namespace Tempest.Enemies
 
         public void Die()
         {
+            if (_isDead) return;
             _isDead = true;
             GameEventBus.RaiseEnemyKilled(_xpValue);
 
