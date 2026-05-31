@@ -141,6 +141,10 @@ namespace Tempest.Spawning
 
         private IEnumerator SpawnFromRift(Vector3 riftCenter, int enemyCount, int eliteCount)
         {
+            GameObject riftVfx = null;
+            if (config.riftVfxPrefab != null)
+                riftVfx = Instantiate(config.riftVfxPrefab, riftCenter, Quaternion.identity);
+
             int elitesSpawned = 0;
             float elapsed = 0f;
 
@@ -182,6 +186,9 @@ namespace Tempest.Spawning
 
                 TrackSpawn(false);
             }
+
+            if (riftVfx != null)
+                Destroy(riftVfx);
         }
 
         private IEnumerator FinaleSequence()

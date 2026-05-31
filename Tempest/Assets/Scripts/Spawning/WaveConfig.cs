@@ -34,5 +34,8 @@ namespace Tempest.Spawning
         public int eliteSwarmThreshold = 4;
         public float eliteChance = 0.5f;
         public int finaleEliteCount = 2;
+
+        [Header("Effects")]
+        public GameObject riftVfxPrefab;
     }
 }
