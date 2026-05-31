@@ -96,4 +96,19 @@ public static class PlayerRegistry
 
         return best;
     }
+
+    public static float GetMinDistanceFromPlayers(Vector3 position)
+    {
+        float minDist = float.MaxValue;
+
+        foreach (var player in _players)
+        {
+            if (player.IsDown) continue;
+            float dist = Vector3.Distance(position, player.transform.position);
+            if (dist < minDist)
+                minDist = dist;
+        }
+
+        return minDist;
+    }
 }
