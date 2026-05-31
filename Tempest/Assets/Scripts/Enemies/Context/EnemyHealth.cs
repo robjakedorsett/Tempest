@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Tempest.Weapons;
 using UnityEngine;
@@ -20,6 +21,8 @@ namespace Tempest.Enemies
         public float CurrentHealth => _currentHealth;
         public float MaxHealth => _maxHealth;
         public bool IsDead => _isDead;
+
+        public event Action OnDamageTaken;
 
         public void Initialize(EnemyDefinition definition)
         {
@@ -48,6 +51,7 @@ namespace Tempest.Enemies
             _currentHealth = Mathf.Max(0f, _currentHealth - damage);
 
             SpawnHitEffect(hitPoint, hitNormal);
+            OnDamageTaken?.Invoke();
 
             if (_currentHealth <= 0f)
             {

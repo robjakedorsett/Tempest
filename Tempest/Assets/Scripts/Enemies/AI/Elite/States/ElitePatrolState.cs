@@ -29,10 +29,18 @@ namespace Tempest.Enemies.Elite
             base.EnterState();
             _playerDetected = false;
 
+            Context.Health.OnDamageTaken += HandleDamageTaken;
+
             float patrolSpeed = Context.Definition.moveSpeed * 0.5f;
             Context.Agent.Initialize(patrolSpeed);
 
             PickRoamDestination();
+        }
+
+        public override void ExitState()
+        {
+            Context.Health.OnDamageTaken -= HandleDamageTaken;
+            base.ExitState();
         }
 
         public override void FrameUpdate()
@@ -53,6 +61,18 @@ namespace Tempest.Enemies.Elite
 
             if (Context.Agent.IsAtDestination())
                 PickRoamDestination();
+        }
+
+        private void HandleDamageTaken()
+        {
+            if (_playerDetected) return;
+
+            PlayerHealth nearest = PlayerRegistry.GetNearestPlayer(_transform.position);
+            if (nearest == null || nearest.IsDown) return;
+
+            Context.Target = nearest;
+            PlayerRegistry.AssignTarget(nearest);
+            _playerDetected = true;
         }
 
         private void PickRoamDestination()
