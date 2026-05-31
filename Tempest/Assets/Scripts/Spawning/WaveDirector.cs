@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using Tempest.Enemies.Enums;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,7 +16,7 @@ namespace Tempest.Spawning
         private Coroutine _ambientCoroutine;
         private Coroutine _swarmCoroutine;
         private int _swarmCount;
-        private int _currentSwarmActiveCount;
+        private readonly List<GameObject> _swarmEnemies = new();
 
         public int ActiveEnemyCount => _activeEnemyCount;
         public bool IsSpawning => _isSpawning;
@@ -56,9 +57,6 @@ namespace Tempest.Spawning
         {
             _activeEnemyCount--;
             if (_activeEnemyCount < 0) _activeEnemyCount = 0;
-
-            _currentSwarmActiveCount--;
-            if (_currentSwarmActiveCount < 0) _currentSwarmActiveCount = 0;
 
             _ambientActiveCount--;
             if (_ambientActiveCount < 0) _ambientActiveCount = 0;
@@ -102,7 +100,7 @@ namespace Tempest.Spawning
                 if (!_isSpawning) yield break;
 
                 _swarmCount++;
-                _currentSwarmActiveCount = 0;
+                _swarmEnemies.Clear();
                 GameEventBus.RaiseSwarmStarted(_swarmCount);
 
                 yield return StartCoroutine(ExecuteSwarm(_swarmCount, false));
@@ -132,8 +130,7 @@ namespace Tempest.Spawning
                 yield return StartCoroutine(SpawnFromRift(riftCenter, enemiesPerRift, elitesForThisRift));
             }
 
-            // Wait for this swarm's enemies to die
-            while (_currentSwarmActiveCount > 0)
+            while (CountAliveSwarmEnemies() > 0)
                 yield return null;
 
             GameEventBus.RaiseSwarmEnded();
@@ -160,26 +157,27 @@ namespace Tempest.Spawning
 
                 if (!_isSpawning) yield break;
 
-                Vector3 spawnPos;
-                if (!TryGetClusterPosition(riftCenter, config.riftRadius, out spawnPos))
-                    continue;
+                Vector3 spawnPos = GetClusterPosition(riftCenter, config.riftRadius);
 
                 bool spawnElite = elitesSpawned < eliteCount && (enemyCount - i) <= (eliteCount - elitesSpawned);
                 if (!spawnElite && elitesSpawned < eliteCount && Random.value < 0.3f)
                     spawnElite = true;
 
+                GameObject spawned;
                 if (spawnElite)
                 {
-                    SpawnEnemy(EnemyTier.Elite, spawnPos);
+                    spawned = SpawnEnemy(EnemyTier.Elite, spawnPos);
                     elitesSpawned++;
                 }
                 else
                 {
-                    SpawnEnemy(EnemyTier.Swarm, spawnPos);
+                    spawned = SpawnEnemy(EnemyTier.Swarm, spawnPos);
                 }
 
+                if (spawned != null)
+                    _swarmEnemies.Add(spawned);
+
                 TrackSpawn(false);
-                _currentSwarmActiveCount++;
             }
         }
 
@@ -187,7 +185,7 @@ namespace Tempest.Spawning
         {
             _isSpawning = true;
             _swarmCount++;
-            _currentSwarmActiveCount = 0;
+            _swarmEnemies.Clear();
             GameEventBus.RaiseSwarmStarted(_swarmCount);
 
             yield return StartCoroutine(ExecuteSwarm(_swarmCount, true));
@@ -195,11 +193,11 @@ namespace Tempest.Spawning
             _isSpawning = false;
         }
 
-        private void SpawnEnemy(EnemyTier tier, Vector3 position)
+        private GameObject SpawnEnemy(EnemyTier tier, Vector3 position)
         {
             GameObject prefab = ChooseEnemyByTier(tier);
-            if (prefab == null) return;
-            Instantiate(prefab, position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+            if (prefab == null) return null;
+            return Instantiate(prefab, position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
         }
 
         private GameObject ChooseEnemyByTier(EnemyTier tier)
@@ -230,10 +228,18 @@ namespace Tempest.Spawning
             return null;
         }
 
-        private bool TryGetClusterPosition(Vector3 center, float radius, out Vector3 result)
+        private int CountAliveSwarmEnemies()
         {
-            result = Vector3.zero;
+            int count = 0;
+            foreach (var enemy in _swarmEnemies)
+            {
+                if (enemy != null) count++;
+            }
+            return count;
+        }
 
+        private Vector3 GetClusterPosition(Vector3 center, float radius)
+        {
             for (int i = 0; i < 5; i++)
             {
                 Vector3 randomPoint = center + Random.insideUnitSphere * radius;
@@ -241,14 +247,10 @@ namespace Tempest.Spawning
 
                 NavMeshHit hit;
                 if (NavMesh.SamplePosition(randomPoint, out hit, radius, NavMesh.AllAreas))
-                {
-                    result = hit.position;
-                    return true;
-                }
+                    return hit.position;
             }
 
-            result = center;
-            return true;
+            return center;
         }
 
         private int CalculateRiftCount(int swarmNumber, bool isFinale)
